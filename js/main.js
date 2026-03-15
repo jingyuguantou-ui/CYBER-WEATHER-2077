@@ -183,8 +183,11 @@ window.handleStartClick = async function() {
         document.documentElement.setAttribute('data-theme', 'aurora');
     } else if (savedTheme === 'void') {
         document.documentElement.setAttribute('data-theme', 'void');
+    } else if (savedTheme === 'monochrome') {
+        document.documentElement.setAttribute('data-theme', 'monochrome');
     } else {
-        document.documentElement.removeAttribute('data-theme');
+        // 默认黑白主题，保持 data-theme="mono"，不移除属性（移除会导致闪绿）
+        document.documentElement.setAttribute('data-theme', 'mono');
     }
 
     // 显示加载界面（代码雨）
@@ -274,7 +277,7 @@ async function initMainApp() {
 // 定位用户位置并播报天气
 async function locateAndReportWeather() {
     if (typeof TerminalUI !== 'undefined') {
-        TerminalUI.addOutput('> INITIALIZING GPS MODULE...', 'system');
+        TerminalUI.addOutput('> TRIANGULATING SIGNAL ORIGIN...', 'system');
     }
 
     try {
@@ -291,9 +294,9 @@ async function locateAndReportWeather() {
         else                    accLabel = '☆☆☆ 低精度(IP定位)';
 
         if (typeof TerminalUI !== 'undefined') {
-            TerminalUI.addOutput(`> LOCATION FIXED: ${latitude.toFixed(4)}°, ${longitude.toFixed(4)}° ±${accKm}km  [${accLabel}]`, 'success');
+            TerminalUI.addOutput(`> NODE LOCKED: ${latitude.toFixed(4)}°, ${longitude.toFixed(4)}° ±${accKm}km  [${accLabel}]`, 'success');
             if (accM > 5000) {
-                TerminalUI.addOutput('> WARN: 精度不足，建议在手机/带GPS的设备上使用', 'error');
+                TerminalUI.addOutput('> SIGNAL DEGRADED — SWITCH TO MOBILE FOR ENHANCED PRECISION', 'error');
             }
         }
 
@@ -316,7 +319,7 @@ async function locateAndReportWeather() {
         };
 
         if (nearestCity && typeof TerminalUI !== 'undefined') {
-            TerminalUI.addOutput(`> NEAREST CITY: ${nearestCity.n} (${distKm}km away)`, 'system');
+            TerminalUI.addOutput(`> NEAREST NODE: ${nearestCity.n} (${distKm}km away)`, 'system');
         }
 
         // 地球仪旋转聚焦到该城市
@@ -337,7 +340,7 @@ async function locateAndReportWeather() {
         }[error.code] || error.message;
 
         if (typeof TerminalUI !== 'undefined') {
-            TerminalUI.addOutput(`> GPS ERROR: ${errMsg} — 使用默认城市`, 'error');
+            TerminalUI.addOutput(`> SIGNAL LOST: ${errMsg} — DEFAULTING TO FALLBACK NODE`, 'error');
         }
 
         // 定位失败，使用北京
@@ -358,10 +361,11 @@ const WelcomeRain = (() => {
     const FONT_SIZE   = 13;   // px，字符格子尺寸（中文字符适配）
     const INTERVAL_MS = 35;   // 帧间隔（ms），与参考文件一致
 
-    // 两套字符集
-    const CHARS_HACKER = '0123456789天地风云雨雪雷电山海水火气温湿压速光波数据流码网系统终端字节信息密码科技未来宇宙星空';
-    const CHARS_AURORA  = '0123456789ABCDEF';
-    const CHARS_VOID    = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.?/~`';
+    // 字符集
+    const CHARS_HACKER      = '0123456789天地风云雨雪雷电山海水火气温湿压速光波数据流码网系统终端字节信息密码科技未来宇宙星空';
+    const CHARS_AURORA      = '0123456789ABCDEF';
+    const CHARS_VOID        = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.?/~`';
+    const CHARS_MONOCHROME  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.:-=+|[](){}';  // 精简字符集，印刷版面感
 
     let canvas = null;
     let ctx    = null;
@@ -374,9 +378,14 @@ const WelcomeRain = (() => {
         return document.documentElement.getAttribute('data-theme') === 'aurora';
     }
 
-    /** 判断当前是否 VOID 主题 */
+    /** 判断当前是否 VOID（SPECTRE 紫黑）主题 */
     function isVoid() {
         return document.documentElement.getAttribute('data-theme') === 'void';
+    }
+
+    /** 判断当前是否 VOID（MONOCHROME 黑白）主题 */
+    function isMonochrome() {
+        return document.documentElement.getAttribute('data-theme') === 'monochrome';
     }
 
     /** 根据窗口宽度重建列数组 */
@@ -394,21 +403,27 @@ const WelcomeRain = (() => {
 
         const aurora  = isAurora();
         const void_   = isVoid();
-        const chars   = aurora ? CHARS_AURORA : void_ ? CHARS_VOID : CHARS_HACKER;
+        const mono    = isMonochrome();
+        const chars   = aurora ? CHARS_AURORA
+                      : void_  ? CHARS_VOID
+                      : mono   ? CHARS_MONOCHROME
+                      : CHARS_HACKER;
         const w = canvas.width, h = canvas.height;
 
         // 重置 filter（非 VOID 帧确保无残留）
         if (!void_) ctx.filter = 'none';
 
-        // 拖影：HACKER 用纯黑，AURORA 用赛博蓝，VOID 用磷光暖黄烧屏底色（alpha 更大，余晖更深）
+        // 拖影底色
         ctx.fillStyle = aurora ? 'rgba(22, 93, 255, 0.05)'
-                      : void_  ? 'rgba(10, 6, 0, 0.15)'   // 磷光余晖：暖黄叠淡，alpha 0.15 → 烧屏感
+                      : void_  ? 'rgba(8, 0, 16, 0.08)'
+                      : mono   ? 'rgba(242, 240, 235, 0.06)'  // 旧报纸白，极低 alpha 营造铅笔拖尾
                       : 'rgba(0, 0, 0, 0.05)';
         ctx.fillRect(0, 0, w, h);
 
-        // 字符颜色：按主题分支
+        // 字符颜色
         ctx.fillStyle = aurora ? '#ffffff'
-                      : void_  ? '#cc00ff'
+                      : void_  ? '#df88ff'   // 亮紫白（与 CSS --code-rain-color 一致）
+                      : mono   ? '#555555'   // 中灰，印刷铅字感
                       : '#00FF00';
         ctx.font      = `${FONT_SIZE}px Consolas, monospace`;
 
@@ -423,7 +438,7 @@ const WelcomeRain = (() => {
             drops[i]++;
         }
 
-        // ── VOID 专属：帧末噪点撒布 ──────────────────────────────
+        // ── VOID（SPECTRE）专属：帧末噪点撒布 ──────────────────────────────
         if (void_) {
             // 随机撒 80~120 个单像素亮点，模拟 CRT 磷光颗粒噪点
             const noiseCount = 80 + Math.floor(Math.random() * 40);
@@ -431,12 +446,13 @@ const WelcomeRain = (() => {
                 const nx = Math.random() * w;
                 const ny = Math.random() * h;
                 const alpha = 0.03 + Math.random() * 0.05; // 0.03 ~ 0.08
-                ctx.fillStyle = `rgba(204, 0, 255, ${alpha.toFixed(3)})`;
+                ctx.fillStyle = `rgba(223, 136, 255, ${alpha.toFixed(3)})`;
                 ctx.fillRect(nx | 0, ny | 0, 1, 1);
             }
             // 帧末滤镜：轻微增强对比度与亮度，强化磷光颗粒感
             ctx.filter = 'contrast(1.1) brightness(1.05)';
         }
+        // MONOCHROME 无噪点，保持极简
     }
 
     /** 启动动画 */
@@ -542,8 +558,22 @@ const VoidCRT = (() => {
     return { init };
 })();
 
-// DOMContentLoaded 时启动欢迎页代码雨
+// DOMContentLoaded 时：先恢复主题，再启动代码雨，避免第一帧闪绿
 document.addEventListener('DOMContentLoaded', () => {
+    // ⚡ 必须在 WelcomeRain.start() 之前同步设好 data-theme，
+    //    否则第一帧 isVoid() 返回 false，字符色 fallthrough 到绿色
+    const _saved = localStorage.getItem('weather-theme');
+    if (_saved === 'void') {
+        document.documentElement.setAttribute('data-theme', 'void');
+    } else if (_saved === 'aurora') {
+        document.documentElement.setAttribute('data-theme', 'aurora');
+    } else if (_saved === 'monochrome') {
+        document.documentElement.setAttribute('data-theme', 'monochrome');
+    } else {
+        // 默认黑白主题，保持 mono，不移除（移除会导致第一帧闪绿）
+        document.documentElement.setAttribute('data-theme', 'mono');
+    }
+
     WelcomeRain.start();
     VoidCRT.init();
 });
@@ -644,7 +674,7 @@ async function loadCityWeather(city, options = {}) {
 
     try {
         if (typeof TerminalUI !== 'undefined') {
-            TerminalUI.addOutput(`> QUERYING WEATHER: ${city.n || city.name}`, 'system');
+            TerminalUI.addOutput(`> FETCHING ATMOSPHERIC DATA: ${city.n || city.name}`, 'system');
         }
 
         let weather = null;
@@ -693,7 +723,7 @@ async function loadCityWeather(city, options = {}) {
     } catch (e) {
         console.error('Error loading weather:', e);
         if (typeof TerminalUI !== 'undefined') {
-            TerminalUI.addOutput(`> ERROR: ${e.message}`, 'error');
+            TerminalUI.addOutput(`> TRANSMISSION FAILED: ${e.message}`, 'error');
         }
     }
 }
@@ -724,9 +754,14 @@ const ThemeManager = {
             description: '蓝白配色'
         },
         void: {
+            name: 'SPECTRE',
+            label: '幽灵模式',
+            description: '紫黑配色'
+        },
+        monochrome: {
             name: 'VOID',
             label: '虚空模式',
-            description: '紫黑配色'
+            description: '黑白配色'
         }
     },
     
@@ -747,10 +782,14 @@ const ThemeManager = {
     applyTheme(themeName) {
         const root = document.documentElement;
         
-        if (themeName === 'aurora') {
+        if (themeName === 'hacker') {
+            root.setAttribute('data-theme', 'hacker');
+        } else if (themeName === 'aurora') {
             root.setAttribute('data-theme', 'aurora');
         } else if (themeName === 'void') {
             root.setAttribute('data-theme', 'void');
+        } else if (themeName === 'monochrome') {
+            root.setAttribute('data-theme', 'monochrome');
         } else {
             root.removeAttribute('data-theme');
         }
@@ -770,7 +809,7 @@ const ThemeManager = {
     },
     
     toggle() {
-        const order = ['hacker', 'aurora', 'void'];
+        const order = ['hacker', 'aurora', 'void', 'monochrome'];
         const idx = order.indexOf(this.currentTheme);
         const newTheme = order[(idx + 1) % order.length];
         this.applyTheme(newTheme);

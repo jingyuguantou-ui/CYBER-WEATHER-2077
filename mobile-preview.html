@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Mobile Preview — CYBER WEATHER 2077</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 20px 60px;
+    font-family: 'Consolas', 'IBM Plex Mono', monospace;
+    color: #00ff00;
+  }
+
+  /* ── 顶部标题 ── */
+  .page-title {
+    font-size: 12px;
+    letter-spacing: 0.25em;
+    color: rgba(0,255,0,0.45);
+    margin-bottom: 20px;
+    align-self: flex-start;
+    max-width: 960px;
+    width: 100%;
+  }
+
+  /* ── 工具栏 ── */
+  .toolbar {
+    width: 100%;
+    max-width: 960px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+
+  .toolbar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .group-label {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: rgba(0,255,0,0.35);
+    min-width: 48px;
+    text-align: right;
+    padding-right: 4px;
+  }
+
+  .btn {
+    padding: 5px 13px;
+    border: 1px solid rgba(0,255,0,0.25);
+    background: transparent;
+    color: rgba(0,255,0,0.7);
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .btn:hover {
+    background: rgba(0,255,0,0.07);
+    border-color: rgba(0,255,0,0.5);
+    color: #00ff00;
+  }
+  .btn.active {
+    background: rgba(0,255,0,0.14);
+    border-color: #00ff00;
+    color: #00ff00;
+    box-shadow: 0 0 8px rgba(0,255,0,0.25);
+  }
+
+  /* 安卓按钮 */
+  .btn.android { border-color: rgba(0,212,255,0.25); color: rgba(0,212,255,0.7); }
+  .btn.android:hover { background: rgba(0,212,255,0.07); border-color: rgba(0,212,255,0.5); color: #00d4ff; }
+  .btn.android.active { background: rgba(0,212,255,0.14); border-color: #00d4ff; color: #00d4ff; box-shadow: 0 0 8px rgba(0,212,255,0.25); }
+
+  /* 平板按钮 */
+  .btn.tablet { border-color: rgba(180,100,255,0.25); color: rgba(180,100,255,0.7); }
+  .btn.tablet:hover { background: rgba(180,100,255,0.07); border-color: rgba(180,100,255,0.5); color: #cc88ff; }
+  .btn.tablet.active { background: rgba(180,100,255,0.14); border-color: #cc88ff; color: #cc88ff; box-shadow: 0 0 8px rgba(180,100,255,0.25); }
+
+  /* 工具按钮行 */
+  .util-row {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+  }
+  .btn.util { border-color: rgba(255,255,255,0.12); color: rgba(255,255,255,0.4); font-size: 12px; padding: 5px 10px; }
+  .btn.util:hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.3); }
+
+  .vdivider {
+    width: 1px; height: 18px;
+    background: rgba(0,255,0,0.12);
+    align-self: center;
+  }
+
+  /* ── 手机外壳 ── */
+  .phone-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .phone-shell {
+    position: relative;
+    background: #111;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* 通用圆角：苹果系 */
+  .phone-shell.apple-style { border-radius: 44px; }
+  /* 安卓系稍方 */
+  .phone-shell.android-style { border-radius: 32px; }
+  /* 平板 */
+  .phone-shell.tablet-style { border-radius: 20px; }
+
+  .phone-shell {
+    box-shadow:
+      0 0 0 2px #1a1a1a,
+      0 0 0 4px #252525,
+      0 0 50px rgba(0,255,0,0.08),
+      0 24px 80px rgba(0,0,0,0.85);
+  }
+  .phone-shell.android-style {
+    box-shadow:
+      0 0 0 2px #1a1a1a,
+      0 0 0 4px #252525,
+      0 0 50px rgba(0,212,255,0.06),
+      0 24px 80px rgba(0,0,0,0.85);
+  }
+  .phone-shell.tablet-style {
+    box-shadow:
+      0 0 0 2px #1a1a1a,
+      0 0 0 4px #252525,
+      0 0 50px rgba(180,100,255,0.06),
+      0 24px 80px rgba(0,0,0,0.85);
+  }
+
+  /* 动态岛 / 刘海 */
+  .notch {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+  }
+  /* 动态岛（iPhone 14 Pro+） */
+  .notch.island {
+    width: 88px; height: 26px;
+    background: #000;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  /* 打孔屏（安卓主流） */
+  .notch.punch {
+    width: 10px; height: 10px;
+    background: #111;
+    border-radius: 50%;
+    border: 1px solid #222;
+    top: 16px;
+  }
+  /* 刘海（较老机型） */
+  .notch.bang {
+    width: 120px; height: 28px;
+    background: #000;
+    border-radius: 0 0 16px 16px;
+    top: 0;
+  }
+  /* 平板无刘海 */
+  .notch.none { display: none; }
+
+  .notch-cam {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #1a1a1a; border: 1px solid #2a2a2a;
+  }
+  .notch-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: #0d2a0d;
+    border: 1px solid rgba(0,255,0,0.2);
+    box-shadow: 0 0 4px rgba(0,255,0,0.4);
+  }
+
+  /* 屏幕 */
+  .phone-screen {
+    overflow: hidden;
+    background: #000;
+  }
+  .apple-style  .phone-screen { border-radius: 34px; }
+  .android-style .phone-screen { border-radius: 22px; }
+  .tablet-style  .phone-screen { border-radius: 12px; }
+
+  .phone-screen iframe {
+    border: none; display: block; width: 100%; height: 100%;
+  }
+
+  /* 侧键 */
+  .side-btn {
+    position: absolute;
+    background: #1c1c1c;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+  .side-btn.power  { right: -5px; top: 110px; width: 5px; height: 55px; }
+  .side-btn.vol-up { left: -5px;  top: 95px;  width: 5px; height: 38px; }
+  .side-btn.vol-dn { left: -5px;  top: 143px; width: 5px; height: 38px; }
+  .side-btn.mute   { left: -5px;  top: 68px;  width: 5px; height: 20px; }
+
+  /* 底部横条 */
+  .phone-home {
+    position: absolute;
+    bottom: 10px; left: 50%; transform: translateX(-50%);
+    width: 100px; height: 4px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 3px;
+  }
+
+  /* ── 尺寸信息 ── */
+  .size-label {
+    margin-top: 16px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: rgba(0,255,0,0.3);
+    text-align: center;
+  }
+
+  /* ── 扫描线 ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(0,0,0,0.025) 2px, rgba(0,0,0,0.025) 4px
+    );
+    pointer-events: none; z-index: 999;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-title">▶ MOBILE PREVIEW — CYBER WEATHER 2077</div>
+
+<div class="toolbar">
+
+  <!-- 苹果 -->
+  <div class="toolbar-row">
+    <span class="group-label">APPLE</span>
+    <button class="btn" onclick="setDevice('ip13')">iPhone 13</button>
+    <button class="btn active" id="btn-ip16" onclick="setDevice('ip16')">iPhone 16</button>
+    <button class="btn" onclick="setDevice('ip17')">iPhone 17</button>
+    <button class="btn" onclick="setDevice('ipmax')">16 Pro Max</button>
+  </div>
+
+  <!-- 平板 -->
+  <div class="toolbar-row">
+    <span class="group-label">TABLET</span>
+    <button class="btn tablet" onclick="setDevice('ipadmini')">iPad mini</button>
+    <button class="btn tablet" onclick="setDevice('ipadair')">iPad Air</button>
+    <button class="btn tablet" onclick="setDevice('ipadpro')">iPad Pro 11"</button>
+    <button class="btn tablet" onclick="setDevice('mipad')">小米平板6</button>
+    <button class="btn tablet" onclick="setDevice('matepad')">MatePad Pro</button>
+  </div>
+
+  <!-- 安卓 -->
+  <div class="toolbar-row">
+    <span class="group-label">ANDROID</span>
+    <button class="btn android" onclick="setDevice('mate60')">华为 Mate60</button>
+    <button class="btn android" onclick="setDevice('p60')">华为 P60</button>
+    <button class="btn android" onclick="setDevice('mi14')">小米 14</button>
+    <button class="btn android" onclick="setDevice('mi14u')">小米 14 Ultra</button>
+    <button class="btn android" onclick="setDevice('find7')">OPPO Find X7</button>
+    <button class="btn android" onclick="setDevice('reno12')">OPPO Reno12</button>
+  </div>
+
+  <!-- 工具 -->
+  <div class="toolbar-row">
+    <span class="group-label"></span>
+    <button class="btn util" title="横竖屏" onclick="toggleLandscape()">⟳ 旋转</button>
+    <div class="vdivider"></div>
+    <button class="btn util" onclick="reloadFrame()">↺ 刷新</button>
+    <button class="btn util" onclick="openDirect()">↗ 新窗口</button>
+  </div>
+
+</div>
+
+<!-- 手机外壳 -->
+<div class="phone-wrap" id="phoneWrap">
+  <div class="phone-shell apple-style" id="phoneShell">
+    <div class="notch island" id="phoneNotch">
+      <div class="notch-cam"></div>
+      <div class="notch-dot"></div>
+    </div>
+    <div class="phone-screen" id="phoneScreen">
+      <iframe id="previewFrame" src="index.html" title="Preview"></iframe>
+    </div>
+    <div class="side-btn mute"></div>
+    <div class="side-btn vol-up"></div>
+    <div class="side-btn vol-dn"></div>
+    <div class="side-btn power"></div>
+    <div class="phone-home" id="phoneHome"></div>
+  </div>
+</div>
+
+<div class="size-label" id="sizeLabel">390 × 844 — iPhone 16</div>
+
+<script>
+/**
+ * 机型数据表
+ * w/h: 逻辑像素宽高
+ * shellW/shellH: 外壳宽高(px, 竖屏)
+ * padT/padB/padLR: 外壳内边距(上/下/左右)
+ * shellStyle: apple-style | android-style | tablet-style
+ * notch: island | punch | bang | none
+ */
+const DEVICES = {
+  // ── Apple ──
+  ip13:    { label:'390 × 844 — iPhone 13',        w:390, h:844,  shellW:350, padT:56, padB:38, padLR:11, shellStyle:'apple-style',   notch:'bang'   },
+  ip16:    { label:'390 × 844 — iPhone 16',         w:390, h:844,  shellW:350, padT:58, padB:40, padLR:11, shellStyle:'apple-style',   notch:'island' },
+  ip17:    { label:'393 × 852 — iPhone 17',         w:393, h:852,  shellW:356, padT:60, padB:42, padLR:12, shellStyle:'apple-style',   notch:'island' },
+  ipmax:   { label:'430 × 932 — iPhone 16 Pro Max', w:430, h:932,  shellW:390, padT:64, padB:46, padLR:14, shellStyle:'apple-style',   notch:'island' },
+
+  // ── iPad ──
+  ipadmini:{ label:'744 × 1133 — iPad mini 6',     w:744, h:1133, shellW:460, padT:52, padB:38, padLR:16, shellStyle:'tablet-style',  notch:'none'   },
+  ipadair: { label:'820 × 1180 — iPad Air 5',      w:820, h:1180, shellW:500, padT:56, padB:40, padLR:18, shellStyle:'tablet-style',  notch:'none'   },
+  ipadpro: { label:'834 × 1194 — iPad Pro 11"',    w:834, h:1194, shellW:510, padT:52, padB:36, padLR:16, shellStyle:'tablet-style',  notch:'none'   },
+  mipad:   { label:'800 × 1280 — 小米平板6',        w:800, h:1280, shellW:490, padT:48, padB:36, padLR:16, shellStyle:'tablet-style',  notch:'none'   },
+  matepad: { label:'848 × 1280 — MatePad Pro 11"', w:848, h:1280, shellW:510, padT:48, padB:36, padLR:16, shellStyle:'tablet-style',  notch:'none'   },
+
+  // ── Android ──
+  mate60:  { label:'392 × 873 — 华为 Mate 60 Pro', w:392, h:873,  shellW:354, padT:56, padB:38, padLR:11, shellStyle:'android-style', notch:'punch'  },
+  p60:     { label:'390 × 844 — 华为 P60 Pro',     w:390, h:844,  shellW:350, padT:54, padB:38, padLR:11, shellStyle:'android-style', notch:'punch'  },
+  mi14:    { label:'393 × 852 — 小米 14',           w:393, h:852,  shellW:356, padT:56, padB:38, padLR:11, shellStyle:'android-style', notch:'punch'  },
+  mi14u:   { label:'412 × 892 — 小米 14 Ultra',    w:412, h:892,  shellW:372, padT:58, padB:40, padLR:12, shellStyle:'android-style', notch:'punch'  },
+  find7:   { label:'412 × 919 — OPPO Find X7',     w:412, h:919,  shellW:372, padT:58, padB:40, padLR:12, shellStyle:'android-style', notch:'punch'  },
+  reno12:  { label:'393 × 873 — OPPO Reno12',      w:393, h:873,  shellW:356, padT:56, padB:38, padLR:11, shellStyle:'android-style', notch:'punch'  },
+};
+
+let currentKey = 'ip16';
+let isLandscape = false;
+
+function setDevice(key, fromBtn) {
+  currentKey = key;
+  const d = DEVICES[key];
+  if (!d) return;
+
+  // 更新按钮高亮（找到 onclick 包含该 key 的按钮）
+  document.querySelectorAll('.btn').forEach(b => {
+    if (b.getAttribute('onclick') === `setDevice('${key}')`) {
+      b.classList.add('active');
+    } else {
+      // 只取消同类按钮
+      b.classList.remove('active');
+    }
+  });
+
+  applyDevice();
+}
+
+function applyDevice() {
+  const d = DEVICES[currentKey];
+  const shell  = document.getElementById('phoneShell');
+  const screen = document.getElementById('phoneScreen');
+  const notch  = document.getElementById('phoneNotch');
+  const home   = document.getElementById('phoneHome');
+  const frame  = document.getElementById('previewFrame');
+  const label  = document.getElementById('sizeLabel');
+
+  // 重置 shell 样式类
+  shell.className = 'phone-shell';
+  shell.classList.add(d.shellStyle);
+
+  let screenW, screenH, shellW, shellH;
+
+  if (!isLandscape) {
+    shellW  = d.shellW;
+    screenW = shellW - d.padLR * 2;
+    screenH = Math.round(screenW * d.h / d.w);
+    shellH  = screenH + d.padT + d.padB;
+
+    // 限制最大高度，避免溢出视口
+    const maxH = window.innerHeight - 220;
+    if (shellH > maxH) {
+      const ratio = maxH / shellH;
+      shellH  = maxH;
+      screenH = Math.round(screenH * ratio);
+      screenW = Math.round(screenW * ratio);
+      shellW  = Math.round(shellW  * ratio);
+    }
+
+    shell.style.width   = shellW  + 'px';
+    shell.style.height  = shellH  + 'px';
+    shell.style.padding = `${d.padT}px ${d.padLR}px ${d.padB}px`;
+
+    screen.style.width  = screenW + 'px';
+    screen.style.height = screenH + 'px';
+
+    // iframe 用 viewport 模拟真实分辨率
+    frame.style.width      = d.w + 'px';
+    frame.style.height     = d.h + 'px';
+    frame.style.transform  = `scale(${screenW / d.w})`;
+    frame.style.transformOrigin = 'top left';
+
+    // 刘海
+    notch.className = 'notch ' + d.notch;
+    notch.style.top = '14px';
+    notch.style.left = '50%';
+    notch.style.transform = 'translateX(-50%)';
+
+    // 底部横条
+    home.style.display = (d.shellStyle === 'tablet-style') ? 'none' : 'block';
+    home.style.bottom = '10px';
+    home.style.left   = '50%';
+    home.style.transform = 'translateX(-50%)';
+    home.style.width  = '100px';
+    home.style.height = '4px';
+
+    label.textContent = d.label;
+  } else {
+    // 横屏：宽高互换
+    const lW = Math.round(d.shellW * d.h / d.w);  // 横屏外壳宽
+    const lScreenH = d.shellW - d.padLR * 2;
+    const lScreenW = Math.round(lScreenH * d.h / d.w);
+    const lShellW  = lScreenW + d.padT + d.padB;
+    const lShellH  = d.shellW;
+
+    const maxW = window.innerWidth - 80;
+    const scale2 = lShellW > maxW ? maxW / lShellW : 1;
+
+    shell.style.width   = Math.round(lShellW  * scale2) + 'px';
+    shell.style.height  = Math.round(lShellH  * scale2) + 'px';
+    shell.style.padding = `${Math.round(d.padLR*scale2)}px ${Math.round(d.padT*scale2)}px ${Math.round(d.padLR*scale2)}px ${Math.round(d.padB*scale2)}px`;
+
+    const fScreenW = Math.round(lScreenW * scale2);
+    const fScreenH = Math.round(lScreenH * scale2);
+    screen.style.width  = fScreenW + 'px';
+    screen.style.height = fScreenH + 'px';
+
+    frame.style.width     = d.h + 'px';
+    frame.style.height    = d.w + 'px';
+    frame.style.transform = `scale(${fScreenW / d.h})`;
+    frame.style.transformOrigin = 'top left';
+
+    notch.style.display = 'none';
+    home.style.display  = 'none';
+
+    label.textContent = `${d.label} · 横屏`;
+  }
+}
+
+function toggleLandscape() {
+  isLandscape = !isLandscape;
+  applyDevice();
+}
+
+function reloadFrame() {
+  const f = document.getElementById('previewFrame');
+  f.src = f.src;
+}
+
+function openDirect() {
+  window.open('index.html', '_blank');
+}
+
+// 初始化
+applyDevice();
+window.addEventListener('resize', () => applyDevice());
+</script>
+</body>
+</html>

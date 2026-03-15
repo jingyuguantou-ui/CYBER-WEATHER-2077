@@ -132,6 +132,24 @@ const ASCIIEarth = {
                 neonPink: '#ff00cc',
                 terminalGreen: '#00ffff'     // VOID里"青"替代绿
             };
+        } else if (themeName === 'monochrome') {
+            // 黑白印刷 - 极简复古终端美学
+            this.theme = {
+                accent: '#0a0a0a',           // 墨黑主色（点阵）
+                accentDim: '#cccccc',        // 浅灰（衰减色）
+                accentBright: '#000000',     // 纯黑（最亮层）
+                cityPrimary: '#0a0a0a',      // 黑色城市点
+                citySelected: '#444444',     // 深灰选中（无发光）
+                cityHover: '#888888',        // 中灰悬停
+                glow: 'rgba(10, 10, 10, 0.08)',   // 极淡阴影，无霓虹
+                bgPrimary: '#f2f0eb',        // 旧报纸灰白背景
+                codeRainColor: '#555555',    // 中灰代码雨
+                retroGlow: '#0a0a0a',
+                retroBright: '#000000',
+                retroDim: '#888888',
+                neonPink: '#555555',         // 无彩色替代洋红
+                terminalGreen: '#333333'     // 深灰替代绿
+            };
         } else {
             // 黑客帝国主题 - 纯黑+黑客绿+洋红故障
             this.theme = {
@@ -800,8 +818,9 @@ const ASCIIEarth = {
         const w = this.codeRainCanvas.width;
         const h = this.codeRainCanvas.height;
         const fontSize = 13;
-        const isAurora = this.theme.accent === '#ffffff';
-        const isVoid   = this.theme.accent === '#cc00ff';
+        const isAurora      = this.theme.accent === '#ffffff';
+        const isVoid        = this.theme.accent === '#cc00ff';
+        const isMonochrome  = this.theme.accent === '#0a0a0a';
 
         // 每帧清空画布（纯净竖列，不用拖影蒙层）
         ctx.clearRect(0, 0, w, h);
@@ -811,8 +830,9 @@ const ASCIIEarth = {
 
         for (let i = 0; i < this.codeRainDrops.length; i++) {
             const drop = this.codeRainDrops[i];
-            const chars = isAurora ? drop.auroraChars
-                        : isVoid   ? drop.voidChars
+            const chars = isAurora     ? drop.auroraChars
+                        : isVoid       ? drop.voidChars
+                        : isMonochrome ? drop.hackerChars   // monochrome 复用 hacker 字符集（ASCII符号）
                         : drop.hackerChars;
             const trailLen = drop.trail.length;
 
@@ -838,14 +858,17 @@ const ASCIIEarth = {
                 const alpha = ratio * ratio; // 平方衰减，尾部更快消隐
 
                 if (t === 0) {
-                    // 头部：最亮（白色/亮绿/亮紫白）
-                    ctx.fillStyle = isVoid   ? `rgba(238, 102, 255, ${Math.min(1, alpha * 1.5)})` // 亮紫白头
-                                  : isAurora ? `rgba(200, 240, 255, ${Math.min(1, alpha * 1.5)})` // 冰白
-                                  : `rgba(180, 255, 180, ${Math.min(1, alpha * 1.5)})`;           // 亮绿白
+                    // 头部：最亮
+                    ctx.fillStyle = isVoid       ? `rgba(238, 102, 255, ${Math.min(1, alpha * 1.5)})` // 亮紫白头
+                                  : isAurora     ? `rgba(200, 240, 255, ${Math.min(1, alpha * 1.5)})` // 冰白
+                                  : isMonochrome ? `rgba(10, 10, 10, ${Math.min(1, alpha * 1.5)})`    // 墨黑头
+                                  : `rgba(180, 255, 180, ${Math.min(1, alpha * 1.5)})`;               // 亮绿白
                 } else if (isVoid) {
                     ctx.fillStyle = `rgba(204, 0, 255, ${alpha * 0.9})`;   // 品紫主体
                 } else if (isAurora) {
                     ctx.fillStyle = `rgba(255, 255, 255, ${alpha * 0.85})`;
+                } else if (isMonochrome) {
+                    ctx.fillStyle = `rgba(85, 85, 85, ${alpha * 0.85})`;   // 中灰主体（铅笔线稿感）
                 } else {
                     ctx.fillStyle = `rgba(0, 255, 0, ${alpha * 0.9})`;
                 }
@@ -889,31 +912,37 @@ const ASCIIEarth = {
             this.ctx.textAlign = 'center';
             this.ctx.textBaseline = 'middle';
             
-            // 选中城市：主题分支 - Hacker=洋红故障 / Aurora=霓虹绿故障 / Void=青色故障
+            // 选中城市：主题分支 - Hacker=洋红故障 / Aurora=霓虹绿故障 / Void=青色故障 / Monochrome=深灰印章
             if (isSelected) {
                 const isAurora = this.theme.accent === '#ffffff';
                 const isVoid   = this.theme.accent === '#cc00ff';
+                const isMono   = this.theme.accent === '#0a0a0a';
                 const flashPulse = Math.sin(this.cityFlashTime * 0.5) * 0.5 + 0.5;
 
-                // 故障偏移量
+                // 故障偏移量：Monochrome 也保留故障（黑白底+品红故障=更炸）
                 const glitchX = Math.random() > 0.82 ? (Math.random() - 0.5) * 7 : 0;
                 const glitchY = Math.random() > 0.82 ? (Math.random() - 0.5) * 5 : 0;
 
                 // 颜色定义
                 const selColor     = isVoid   ? '#00ffff'     // Void 选中=青色（RGB故障互补）
                                    : isAurora ? '#FFC107'     // Aurora=琥珀金
+                                   : isMono   ? '#FF00FF'     // Monochrome=品红（黑白底异色信号）
                                    : '#FF00FF';               // Hacker=洋红
                 const selBright    = isVoid   ? '#66ffff'
                                    : isAurora ? '#FFD740'     // 亮琥珀
+                                   : isMono   ? '#ff66ff'     // Monochrome=亮品红
                                    : '#ff66ff';
                 const selRgb1      = isVoid   ? '0,255,255'
                                    : isAurora ? '255,193,7'   // 琥珀金 RGB
+                                   : isMono   ? '255,0,255'   // 品红 RGB
                                    : '255,0,255';
                 const selRgb2      = isVoid   ? '0,200,255'   // 青色残影
                                    : isAurora ? '255,160,0'   // 深琥珀残影
+                                   : isMono   ? '255,0,200'   // 品红残影
                                    : '255,0,200';
                 const glitchColor2 = isVoid   ? '#ff00cc'     // Void RGB分离=品红
                                    : isAurora ? '#00d4ff'     // Aurora RGB分离=青色
+                                   : isMono   ? '#00FFFF'     // Monochrome RGB分离=青色（品红互补，极炸）
                                    : '#00FFFF';
 
                 // 外层扩散扫描圈
@@ -955,7 +984,7 @@ const ASCIIEarth = {
                 this.ctx.arc(pos.x, pos.y, 4.5, 0, Math.PI * 2);
                 this.ctx.fill();
 
-                // 核心白点
+                // 核心白点（品红光晕衬托下，白色核心反而更亮眼）
                 this.ctx.shadowBlur = 0;
                 this.ctx.fillStyle = '#ffffff';
                 this.ctx.beginPath();
@@ -977,14 +1006,17 @@ const ASCIIEarth = {
                 // 悬停：主题色圆点 + 光晕框
                 const isAuroraHov = this.theme.accent === '#ffffff';
                 const isVoidHov   = this.theme.accent === '#cc00ff';
+                const isMonoHov   = this.theme.accent === '#0a0a0a';
                 const hovC  = isVoidHov   ? '204,0,255'   // Void=品紫
                             : isAuroraHov ? '255,255,255'
+                            : isMonoHov   ? '10,10,10'    // Monochrome=墨黑光晕
                             : '0,255,0';
                 const hovCC = isVoidHov   ? '#ee66ff'      // Void悬停=亮紫
                             : isAuroraHov ? '#ffffff'
+                            : isMonoHov   ? '#0a0a0a'      // Monochrome=墨黑文字（无发光）
                             : '#00FF00';
                 this.ctx.shadowColor = `rgba(${hovC},0.8)`;
-                this.ctx.shadowBlur = 18;
+                this.ctx.shadowBlur  = isMonoHov ? 6 : 18;  // Monochrome 极小光晕，接近无发光
                 this.ctx.strokeStyle = `rgba(${hovC},0.5)`;
                 this.ctx.lineWidth = 1;
                 this.ctx.strokeRect(pos.x - 12, pos.y - 12, 24, 24);
@@ -998,16 +1030,18 @@ const ASCIIEarth = {
                 // 城市名
                 this.ctx.font = 'bold 10px "JetBrains Mono", monospace';
                 this.ctx.fillStyle = hovCC;
-                this.ctx.shadowBlur = 10;
+                this.ctx.shadowBlur = isMonoHov ? 0 : 10;  // Monochrome 无发光
                 this.ctx.fillText(city.ne.toUpperCase(), pos.x, pos.y - 22);
 
             } else {
                 // 普通城市：主题色光点
                 const isAuroraCity = this.theme.accent === '#ffffff';
                 const isVoidCity   = this.theme.accent === '#cc00ff';
-                // Aurora=白色，Void=品紫，Hacker=黑客绿
+                const isMonoCity   = this.theme.accent === '#0a0a0a';
+                // Aurora=白色，Void=品紫，Monochrome=墨黑，Hacker=黑客绿
                 const cityC  = isVoidCity   ? '204,0,255'
                              : isAuroraCity ? '255,255,255'
+                             : isMonoCity   ? '10,10,10'
                              : '0,255,0';
                 const flicker = 0.7 + Math.random() * 0.3;
                 const scanline = Math.sin(this.time * 0.1 + pos.y * 0.1) * 0.1 + 0.9;
@@ -1031,7 +1065,7 @@ const ASCIIEarth = {
                     if (this.zoom >= 0.7) {
                         this.ctx.font = '8px "JetBrains Mono", monospace';
                         this.ctx.fillStyle = `rgba(${cityC}, ${combinedPulse * 0.85})`;
-                        this.ctx.shadowBlur = 6;
+                        this.ctx.shadowBlur = isMonoCity ? 0 : 6;  // Monochrome 无发光
                         this.ctx.fillText(city.ne.toUpperCase(), pos.x, pos.y + 16);
                     }
 
@@ -1075,13 +1109,17 @@ const ASCIIEarth = {
             // 颜色跟随各主题选中城市色
             const isAurora = this.theme.accent === '#ffffff';
             const isVoid   = this.theme.accent === '#cc00ff';
+            const isMono   = this.theme.accent === '#0a0a0a';
             const color    = isVoid   ? '#00ffff'
                            : isAurora ? '#FFC107'
+                           : isMono   ? '#FF00FF'   // Monochrome=品红（异色信号，炸裂对比）
                            : '#FF00FF';
             const shadow   = isVoid
                 ? '0 0 12px rgba(0,255,255,0.9), 0 0 24px rgba(0,255,255,0.5)'
                 : isAurora
                 ? '0 0 16px rgba(255,193,7,1), 0 0 32px rgba(255,193,7,0.6)'
+                : isMono
+                ? '0 0 8px rgba(255,0,255,0.8), 0 0 20px rgba(255,0,255,0.4)'  // 品红发光
                 : '0 0 8px rgba(255,0,255,0.7)';
 
             if (statsEl) {

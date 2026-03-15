@@ -7,7 +7,7 @@
 
     <!-- ══════════ PWA Meta ══════════ -->
     <!-- 通用 -->
-    <meta name="theme-color" content="#00ff88">
+    <meta name="theme-color" content="#000000">
     <meta name="description" content="赛博朋克风格全球城市实时天气监测系统 CYBER WEATHER 2077">
     <meta name="application-name" content="CYBER WEATHER 2077">
 
@@ -76,8 +76,14 @@
     <script>
     (function(){
         var t = localStorage.getItem('weather-theme');
+        // 无论何种主题，立即写入 data-theme，防止渲染任何默认绿色
         if (t === 'aurora' || t === 'void') {
             document.documentElement.setAttribute('data-theme', t);
+        } else {
+            // 默认黑白主题：明确设置，不让浏览器使用任何过渡色
+            document.documentElement.setAttribute('data-theme', 'mono');
+            document.documentElement.style.backgroundColor = '#000000';
+            document.documentElement.style.color = '#ffffff';
         }
     })();
     </script>
@@ -119,8 +125,8 @@
                 <span class="logo-main">WEATHER</span>
                 <span class="logo-year">2077</span>
             </div>
-            <div class="welcome-subtitle">全球城市实时天气系统</div>
-            <div class="welcome-tagline">GLOBAL WEATHER MONITORING SYSTEM</div>
+            <div class="welcome-subtitle">大气层实时监测终端</div>
+            <div class="welcome-tagline">ATMOSPHERIC SURVEILLANCE NETWORK</div>
             
             <div class="welcome-divider">
                 <span class="divider-line"></span>
@@ -129,13 +135,13 @@
             </div>
             
             <button id="start-btn" class="start-btn cyber-btn" type="button" onclick="handleStartClick()">
-                <span class="btn-text">初始化系统</span>
-                <span class="btn-jp">INITIALIZE SYSTEM</span>
+                <span class="btn-text">接入系统</span>
+                <span class="btn-jp">JACK IN</span>
                 <span class="btn-glitch"></span>
             </button>
             
             <div class="welcome-footer">
-                <span class="footer-text">PUSH START BUTTON</span>
+                <span class="footer-text">AWAITING OPERATOR INPUT</span>
                 <span class="footer-blink">_</span>
             </div>
         </div>
@@ -155,7 +161,7 @@
         <canvas id="loading-rain-canvas" class="loading-rain-canvas"></canvas>
         <!-- 顶部：项目标题 -->
         <div class="loading-top-text">
-            <span class="loading-prompt">&gt;</span> WEATHER TERMINAL
+            <span class="loading-prompt">&gt;</span> CYBER WEATHER 2077
             <span class="loading-cursor">_</span>
         </div>
 
@@ -268,6 +274,19 @@
                                 <span class="weather-value" id="weather-desc">--</span>
                             </div>
                         </div>
+
+                        <!-- 关怀提示区 -->
+                        <div id="weather-care-section" class="weather-care-section hidden">
+                            <div class="care-divider"></div>
+                            <div class="care-row">
+                                <span class="care-label">OUTFIT</span>
+                                <span id="weather-outfit-text" class="weather-advice-text">--</span>
+                            </div>
+                            <div class="care-row care-tips-row">
+                                <span class="care-label">ADVISORY</span>
+                                <div id="weather-tips-list" class="weather-tips-list"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -276,10 +295,10 @@
                     <div class="section-label">OUTPUT</div>
                     <div id="terminal-output" class="terminal-output">
                         <div class="output-line">
-                            <span class="message">System ready.</span>
+                            <span class="message">CONNECTION ESTABLISHED.</span>
                         </div>
                         <div class="output-line">
-                            <span class="message">Click city marker or type name.</span>
+                            <span class="message">SELECT TARGET NODE OR ENTER DESIGNATION.</span>
                         </div>
                     </div>
                 </div>
@@ -330,7 +349,7 @@
     <div id="panel-overlay" class="panel-overlay" aria-hidden="true"></div>
     <!-- 右下角浮动触发按钮：仅主内容页（地球页）显示 -->
     <button id="panel-fab" class="panel-fab" type="button" aria-label="打开终端控制面板" aria-expanded="false">
-        <span class="panel-fab-icon">⌨</span>
+        <span class="panel-fab-icon"></span>
     </button>
     <!-- ══════════ /移动端面板遮罩 & 浮动按钮 ══════════ -->
 

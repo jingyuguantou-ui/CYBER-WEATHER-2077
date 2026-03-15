@@ -1,13 +1,13 @@
 /* ============================================
    WEATHER TERMINAL - Cyberpunk Style
-   双主题系统：黑客模式(绿黑) + 极光模式(蓝白)
+   四主题系统：HACKER(黑绿) + AURORA(蓝白) + SPECTRE(紫黑) + VOID(黑白)
    ============================================ */
 
 /* ============================================
    主题变量定义
    ============================================ */
 
-/* 默认主题：黑客模式（纯黑+黑客绿） */
+/* 默认主题：黑客模式（纯黑+黑客绿，品红点缀） */
 :root {
     /* 核心色彩 - 纯黑背景 */
     --bg-primary: #000000;
@@ -20,7 +20,7 @@
     --accent-dim: #003300;
     --accent-bright: #66ff66;
     --accent-cyan: #00ffff;
-    --accent-pink: #FF00FF;   /* 洋红：故障强调色 */
+    --accent-pink: #FF00FF;   /* 品红：故障强调色 */
     
     /* 文字色 - 黑客绿 */
     --text-primary: #00FF00;
@@ -54,14 +54,60 @@
     
     /* 城市标记 */
     --city-primary: #00FF00;
-    --city-selected: #FF00FF;  /* 洋红选中 */
+    --city-selected: #FF00FF;  /* 品红选中 */
     --city-hover: #00ffff;
     
     /* 代码雨 - 纯黑拖影+黑客绿 */
     --code-rain-color: #00FF00;
     --code-rain-bg: rgba(0, 0, 0, 0.05);
     
+    /* 终端错误色 - 品红（主题点缀色，语义统一） */
+    --terminal-error: #FF00FF;
+
+    /* OUTFIT / ADVISORY 专属色 */
+    --care-label:  #FF00FF;   /* 标签：品红，黑底最抢眼 */
+    --care-text:   #00FF00;   /* OUTFIT 正文：亮绿 */
+    --care-tips:   #66ff66;   /* ADVISORY 每条提示：亮绿次级 */
+    
     /* 主题名称 */
+    --theme-name: 'HACKER';
+}
+
+/* HACKER 主题别名：与 :root 相同，供 Anti-FOUC 脚本 data-theme="hacker" 匹配 */
+[data-theme="hacker"] {
+    --bg-primary: #000000;
+    --bg-secondary: #0a0a0a;
+    --bg-tertiary: #111111;
+    --accent-primary: #00FF00;
+    --accent-secondary: #00cc00;
+    --accent-dim: #003300;
+    --accent-bright: #66ff66;
+    --accent-cyan: #00ffff;
+    --accent-pink: #FF00FF;
+    --text-primary: #00FF00;
+    --text-secondary: #00FF00;
+    --text-dim: #00cc00;
+    --text-bright: #66ff66;
+    --glass-bg: rgba(0, 8, 0, 0.60);
+    --glass-bg-light: rgba(0, 15, 0, 0.70);
+    --glass-border: rgba(0, 255, 0, 0.20);
+    --glass-border-bright: rgba(0, 255, 0, 0.40);
+    --glass-blur: blur(30px);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 60px rgba(0, 255, 0, 0.06);
+    --glass-inner-glow: inset 0 1px 0 rgba(0, 255, 0, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+    --globe-bg: #000000;
+    --globe-land: #00FF00;
+    --globe-ocean: #001400;
+    --globe-glow: rgba(0, 255, 0, 0.4);
+    --city-primary: #00FF00;
+    --city-selected: #FF00FF;
+    --city-hover: #00ffff;
+    --code-rain-color: #00FF00;
+    --code-rain-bg: rgba(0, 0, 0, 0.05);
+    --terminal-error: #FF00FF;
+    --care-label:  #FF00FF;
+    --care-text:   #00FF00;
+    --care-tips:   #66ff66;
     --theme-name: 'HACKER';
 }
 
@@ -109,6 +155,14 @@
     /* 代码雨 - 白色字符，赛博蓝半透明背景 */
     --code-rain-color: #ffffff;
     --code-rain-bg: rgba(22, 93, 255, 0.05);
+    
+    /* 终端错误色 - 琥珀黄（蓝背景上对比度最强的警告色） */
+    --terminal-error: #ffcc00;
+
+    /* OUTFIT / ADVISORY 专属色 */
+    --care-label:  #ffcc00;   /* 标签：琥珀黄，蓝底撞色最醒目 */
+    --care-text:   #ffffff;   /* OUTFIT 正文：纯白 */
+    --care-tips:   #b3d4ff;   /* ADVISORY 提示：冷蓝白次级 */
     
     /* 主题名称 */
     --theme-name: 'AURORA';
@@ -164,9 +218,17 @@
     --city-selected: #00ffff;  /* 青色：RGB故障互补 */
     --city-hover: #ff00cc;     /* 品红：故障偏移 */
 
-    /* 代码雨 */
-    --code-rain-color: #cc00ff;
+    /* 代码雨 - 亮紫白（比 #cc00ff 明度更高，字符更清晰） */
+    --code-rain-color: #df88ff;
     --code-rain-bg: rgba(8, 0, 16, 0.05);
+
+    /* 终端错误色 - 青色（紫色的 RGB 互补，故障感十足） */
+    --terminal-error: #00ffff;
+
+    /* OUTFIT / ADVISORY 专属色 */
+    --care-label:  #00ffff;   /* 标签：青色，深紫背景互补撞色极醒目 */
+    --care-text:   #cc00ff;   /* OUTFIT 正文：亮紫主色 */
+    --care-tips:   #ee66ff;   /* ADVISORY 提示：亮紫次级 */
 
     /* 主题名称 */
     --theme-name: 'VOID';
@@ -296,25 +358,43 @@
     text-transform: uppercase;
 }
 
+/* CYBER / 2077：--accent-dim 在紫黑底上接近不可见，改为亮紫白 */
 [data-theme="void"] .logo-glow,
 [data-theme="void"] .logo-year {
     font-family: 'Orbitron', monospace;
     font-weight: 400;
     letter-spacing: 12px;
+    color: #df88ff;                               /* 亮紫白，与代码雨色调一致 */
+    text-shadow: 0 0 12px rgba(204, 0, 255, 0.6); /* 轻微品紫发光，有层次感 */
 }
 
 /* 副标语：IBM Plex Mono + 斜体 = CRT 终端打印感 */
+/* --text-dim: #9900cc 在深紫黑底上不够清晰，改为亮紫白偏暗版 */
 [data-theme="void"] .welcome-subtitle {
     font-family: 'IBM Plex Mono', monospace;
     font-style: italic;
     letter-spacing: 4px;
+    color: #c055ee;                               /* 中亮紫，可读且有层次 */
 }
 
+/* tagline / footer：--accent-dim 完全不可见，改为半透明亮紫 */
 [data-theme="void"] .welcome-tagline,
 [data-theme="void"] .welcome-footer {
     font-family: 'IBM Plex Mono', monospace;
     letter-spacing: 2px;
-    opacity: 0.75;
+    opacity: 0.85;
+    color: #a03ac0;                               /* 中紫，比 #330044 亮得多 */
+}
+
+/* footer blink 光标颜色也跟上 */
+[data-theme="void"] .footer-blink {
+    color: #df88ff;
+}
+
+/* 分割线菱形图标改为品紫 */
+[data-theme="void"] .divider-icon {
+    color: #ee66ff;
+    text-shadow: 0 0 8px rgba(204, 0, 255, 0.8);
 }
 
 /* 按钮：Orbitron 粗字重，突出冲击感 */
@@ -331,10 +411,267 @@
     letter-spacing: 8px;
 }
 
+/* 加载页顶部文字 - 青色 + 青色三层发光（与主界面城市选中色衔接） */
+[data-theme="void"] .loading-top-text {
+    color: #00ffff;
+    text-shadow:
+        0 0 6px rgba(0, 255, 255, 0.9),
+        0 0 16px rgba(0, 220, 255, 0.65),
+        0 0 32px rgba(0, 180, 255, 0.35);
+}
+
 /* 顶栏终端标题 */
 [data-theme="void"] .terminal-title {
     font-family: 'IBM Plex Mono', monospace;
     letter-spacing: 2px;
+}
+
+/* ============================================
+   VOID 模式（黑白）- 极简印刷终端美学
+   黑客美学 + 复古未来主义：90年代激光打印机 + 现代极简
+   ============================================ */
+[data-theme="monochrome"] {
+    /* 核心色彩 - 旧报纸灰白 */
+    --bg-primary: #f2f0eb;
+    --bg-secondary: #e8e5de;
+    --bg-tertiary: #dddad2;
+
+    /* 主色 - 印刷油墨黑 */
+    --accent-primary: #0a0a0a;
+    --accent-secondary: #222222;
+    --accent-dim: #cccccc;
+    --accent-bright: #000000;
+    --accent-cyan: #555555;      /* 中深灰：辅助色 */
+    --accent-pink: #999999;      /* 浅灰：弱化强调色 */
+
+    /* 文字色 - 印刷层次 */
+    --text-primary: #0a0a0a;
+    --text-secondary: #333333;
+    --text-dim: #666666;
+    --text-bright: #000000;
+
+    /* 字体栈（与全局共享） */
+    --font-mono: 'IBM Plex Mono', 'LXGW WenKai Mono', 'Consolas', 'Courier New', monospace;
+    --font-display: 'Orbitron', 'IBM Plex Mono', monospace;
+    --font-impact: 'Russo One', 'Orbitron', monospace;
+
+    /* 过渡 */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s ease;
+
+    /* 磨砂玻璃效果 - 印刷纸调 */
+    --glass-bg: rgba(242, 240, 235, 0.60);
+    --glass-bg-light: rgba(242, 240, 235, 0.78);
+    --glass-border: rgba(10, 10, 10, 0.14);
+    --glass-border-bright: rgba(10, 10, 10, 0.30);
+    --glass-blur: blur(30px);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+    --glass-inner-glow: inset 0 1px 0 rgba(255, 255, 255, 0.80), inset 0 -1px 0 rgba(0, 0, 0, 0.06);
+
+    /* 地球颜色 - 白底黑色点阵 */
+    --globe-bg: #f2f0eb;
+    --globe-land: #0a0a0a;
+    --globe-ocean: #e0ddd6;
+    --globe-glow: rgba(10, 10, 10, 0.10);
+
+    /* 城市标记 */
+    --city-primary: #0a0a0a;
+    --city-selected: #444444;
+    --city-hover: #888888;
+
+    /* 代码雨 - 灰字白底 */
+    --code-rain-color: #555555;
+    --code-rain-bg: rgba(242, 240, 235, 0.06);
+
+    /* 终端错误色 - 印刷红（黑白纸张上的标准错误/警示色） */
+    --terminal-error: #cc2200;
+
+    /* OUTFIT / ADVISORY 专属色 */
+    --care-label:  #000000;   /* 标签：纯黑，纸白底最强对比 */
+    --care-text:   #0a0a0a;   /* OUTFIT 正文：印刷黑 */
+    --care-tips:   #333333;   /* ADVISORY 提示：深灰次级 */
+
+    /* 主题名称 */
+    --theme-name: 'VOID';
+}
+
+/* VOID 黑白主题：印刷网点纹理叠层（替代 CRT 扫描线） */
+[data-theme="monochrome"] body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0) 0px,
+            rgba(0, 0, 0, 0) 3px,
+            rgba(0, 0, 0, 0.03) 4px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0) 0px,
+            rgba(0, 0, 0, 0) 3px,
+            rgba(0, 0, 0, 0.02) 4px
+        );
+}
+
+/* VOID 黑白主题：轻微四角压边（印刷装帧感） */
+[data-theme="monochrome"] body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9998;
+    background: radial-gradient(
+        ellipse at center,
+        transparent 65%,
+        rgba(0, 0, 0, 0.08) 100%
+    );
+}
+
+/* VOID 黑白主题：欢迎页代码雨透明度 */
+[data-theme="monochrome"] .welcome-code-rain {
+    opacity: 0.20;
+}
+
+/* VOID 黑白主题：欢迎页轻微对比度强化（印刷感） */
+[data-theme="monochrome"] #welcome-screen {
+    filter: contrast(1.04) brightness(0.98);
+    transition: filter 0.4s ease;
+}
+
+/* VOID 黑白主题：自定义光标 - 细黑十字准星 */
+[data-theme="monochrome"] html,
+[data-theme="monochrome"] body,
+[data-theme="monochrome"] {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><line x1="8" y1="0" x2="8" y2="6" stroke="%230a0a0a" stroke-width="1.5"/><line x1="8" y1="10" x2="8" y2="16" stroke="%230a0a0a" stroke-width="1.5"/><line x1="0" y1="8" x2="6" y2="8" stroke="%230a0a0a" stroke-width="1.5"/><line x1="10" y1="8" x2="16" y2="8" stroke="%230a0a0a" stroke-width="1.5"/></svg>') 8 8, crosshair;
+}
+
+[data-theme="monochrome"] a,
+[data-theme="monochrome"] button,
+[data-theme="monochrome"] .start-btn,
+[data-theme="monochrome"] .city-ticker-item,
+[data-theme="monochrome"] input[type="text"],
+[data-theme="monochrome"] .terminal-input,
+[data-theme="monochrome"] .glass-panel,
+[data-theme="monochrome"] .panel-section,
+[data-theme="monochrome"] .theme-toggle {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="8" stroke="%230a0a0a" stroke-width="1.5"/><line x1="12" y1="16" x2="12" y2="22" stroke="%230a0a0a" stroke-width="1.5"/><line x1="2" y1="12" x2="8" y2="12" stroke="%230a0a0a" stroke-width="1.5"/><line x1="16" y1="12" x2="22" y2="12" stroke="%230a0a0a" stroke-width="1.5"/><rect x="9" y="9" width="6" height="6" fill="%230a0a0a"/></svg>') 12 12, pointer;
+}
+
+[data-theme="monochrome"] .start-btn:hover,
+[data-theme="monochrome"] button:hover,
+[data-theme="monochrome"] .theme-toggle:hover {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" fill="%230a0a0a" opacity="0.12" stroke="%230a0a0a" stroke-width="1.5"/><rect x="9" y="9" width="6" height="6" fill="%230a0a0a"/></svg>') 12 12, pointer;
+}
+
+/* 地球画布 - 黑色细十字准星 */
+[data-theme="monochrome"] #earth-canvas {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="8" fill="none" stroke="%230a0a0a" stroke-width="1"/><circle cx="16" cy="16" r="2" fill="%230a0a0a"/><line x1="16" y1="4" x2="16" y2="10" stroke="%230a0a0a" stroke-width="1"/><line x1="16" y1="22" x2="16" y2="28" stroke="%230a0a0a" stroke-width="1"/><line x1="4" y1="16" x2="10" y2="16" stroke="%230a0a0a" stroke-width="1"/><line x1="22" y1="16" x2="28" y2="16" stroke="%230a0a0a" stroke-width="1"/></svg>') 16 16, crosshair;
+}
+
+/* 地球画布拖拽 - 深灰实心方块（复古DOS终端感） */
+[data-theme="monochrome"] #earth-canvas:active {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect x="10" y="10" width="12" height="12" fill="%230a0a0a"/><line x1="16" y1="2" x2="16" y2="8" stroke="%230a0a0a" stroke-width="1"/><line x1="16" y1="24" x2="16" y2="30" stroke="%230a0a0a" stroke-width="1"/><line x1="2" y1="16" x2="8" y2="16" stroke="%230a0a0a" stroke-width="1"/><line x1="24" y1="16" x2="30" y2="16" stroke="%230a0a0a" stroke-width="1"/></svg>') 16 16, grabbing;
+}
+
+/* 文本输入 - 黑色 I 型光标 */
+[data-theme="monochrome"] .terminal-input,
+[data-theme="monochrome"] input[type="text"],
+[data-theme="monochrome"] .terminal-output {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 12 24"><rect x="4" y="2" width="4" height="20" fill="%230a0a0a" opacity="0.85"/><line x1="2" y1="2" x2="10" y2="2" stroke="%230a0a0a" stroke-width="1.5"/><line x1="2" y1="22" x2="10" y2="22" stroke="%230a0a0a" stroke-width="1.5"/></svg>') 6 12, text;
+}
+
+/* ============================================
+   VOID 黑白主题 - 字体排版强化（海报印刷感）
+   ============================================ */
+
+/* 大标题：极重字重 + 紧缩字距 = 黑白海报冲击力 */
+[data-theme="monochrome"] .logo-main {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    letter-spacing: 16px;
+    text-transform: uppercase;
+    text-shadow: none;
+    color: #0a0a0a;   /* 印刷油墨黑，最强层级 */
+}
+
+/* CYBER / 2077：白底上必须用明确深色，不能靠 opacity 压出对比度 */
+[data-theme="monochrome"] .logo-glow,
+[data-theme="monochrome"] .logo-year {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    letter-spacing: 12px;
+    text-shadow: none;
+    color: #2a2a2a;   /* 深灰，比主标题稍退一层但清晰可读 */
+    opacity: 1;        /* 清除可能继承的低透明度 */
+}
+
+/* 副标语：正体等宽（不用斜体，印刷规整感） */
+[data-theme="monochrome"] .welcome-subtitle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-style: normal;
+    letter-spacing: 5px;
+    color: #444444;   /* 中深灰，清晰可读 */
+    opacity: 1;        /* 去掉 0.7，改用明确颜色控制层次 */
+}
+
+[data-theme="monochrome"] .welcome-tagline,
+[data-theme="monochrome"] .welcome-footer {
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 3px;
+    color: #666666;   /* 中灰，层次最低但依然可读（原 0.55 opacity 约等于 #b0b0b0，对比度太低） */
+    opacity: 1;        /* 去掉 0.55 */
+}
+
+/* 光标闪烁点 */
+[data-theme="monochrome"] .footer-blink {
+    color: #2a2a2a;
+}
+
+/* 分割线菱形 */
+[data-theme="monochrome"] .divider-icon {
+    color: #555555;
+    text-shadow: none;
+}
+
+/* 按钮：Orbitron 粗字重，黑底白字反转（印刷反色块） */
+[data-theme="monochrome"] .start-btn {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    letter-spacing: 4px;
+}
+
+/* 加载文字 */
+[data-theme="monochrome"] .loading-text {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    letter-spacing: 8px;
+}
+
+/* 加载页顶部文字 - 品红刺入（纸白底唯一彩色，极强视觉冲击，轻发光保住印刷感） */
+[data-theme="monochrome"] .loading-top-text {
+    color: #FF00FF;
+    text-shadow:
+        0 0 4px rgba(255, 0, 255, 0.5),
+        0 0 10px rgba(255, 0, 255, 0.2);
+}
+
+/* 顶栏终端标题 */
+[data-theme="monochrome"] .terminal-title {
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 2px;
+}
+
+/* VOID 黑白主题：切换按钮图标 - 实心黑方块（归零/去色隐喻） */
+[data-theme="monochrome"] .theme-toggle-icon::before {
+    width: 6px;
+    height: 6px;
+    background: var(--accent-primary);   /* #0a0a0a 墨黑 */
+    border-radius: 0;                    /* 正方形，区别其他主题的圆点 */
+    box-shadow: none;                    /* 无发光，极简 */
 }
 
 /* ============================================
@@ -369,12 +706,12 @@ body {
 }
 
 /* ============================================
-   主题切换按钮 - 左下角，与 FAB 平齐
+   主题切换按钮 - 左下角（桌面）/ 左上角（移动端）
    默认隐藏，仅 app-ready（地球页）后显示
    ============================================ */
 .theme-toggle {
     position: fixed;
-    /* 与 FAB 同 bottom，左右对称 */
+    /* 桌面端：左下角，与 FAB 对称 */
     bottom: calc(80px + env(safe-area-inset-bottom, 0px));
     left: 20px;
     top: auto;
@@ -865,7 +1202,12 @@ input[type="text"], .terminal-input,
 }
 
 .loading-prompt {
-    opacity: 0.7;
+    opacity: 1;
+}
+
+/* VOID 纸白背景：光标前缀适度弱化，避免过强 */
+[data-theme="monochrome"] .loading-prompt {
+    opacity: 0.5;
 }
 
 /* 光标闪烁 */
@@ -1074,7 +1416,15 @@ input[type="text"], .terminal-input,
         0 0 260px rgba(255, 0, 204, 0.12);
 }
 
+/* Monochrome主题 - 极淡黑色压印边缘光（无霓虹，素白纸上的铅字压痕感） */
+[data-theme="monochrome"] #earth-canvas {
+    box-shadow:
+        0 0 40px rgba(10, 10, 10, 0.18),
+        0 0 80px rgba(10, 10, 10, 0.08);
+}
+
 /* Hacker主题 - 纯正黑客绿双层光晕（参考代码） */
+[data-theme="hacker"] #earth-canvas,
 #earth-canvas {
     box-shadow:
         0 0 100px rgba(0, 255, 0, 0.4),
@@ -1335,7 +1685,7 @@ input[type="text"], .terminal-input,
 }
 
 .output-line .message.error {
-    color: #ff6666;
+    color: var(--terminal-error);
 }
 
 /* Footer */
@@ -1666,26 +2016,25 @@ input[type="text"], .terminal-input,
     display: none;              /* 桌面端隐藏，@media 内覆盖为 flex */
     position: fixed;
     right: 20px;
-    bottom: calc(80px + env(safe-area-inset-bottom, 0px));  /* 上移，避开底部文字 */
+    bottom: calc(80px + env(safe-area-inset-bottom, 0px));
     z-index: 901;
     width: 52px;
     height: 52px;
     border-radius: 50%;
-    /* ── 透明磨砂玻璃质感，无边框 ── */
+    /* ── 半透明磨砂玻璃质感 ── */
     background: rgba(255, 255, 255, 0.07);
-    backdrop-filter: blur(18px) saturate(180%);
-    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: none;
     color: var(--accent-primary, #00ff88);
-    font-size: 22px;
+    font-size: 0;               /* 图标已移除，字号归零 */
     cursor: pointer;
     align-items: center;
     justify-content: center;
-    /* 仅保留外发光，无边框线 */
     box-shadow:
         0 4px 20px rgba(0, 0, 0, 0.35),
-        0 0 14px color-mix(in srgb, var(--accent-primary, #00ff88) 22%, transparent);
-    transition: background 0.22s, box-shadow 0.22s, transform 0.18s, color 0.22s;
+        0 0 14px color-mix(in srgb, var(--accent-primary, #00ff88) 18%, transparent);
+    transition: background 0.22s, box-shadow 0.22s, transform 0.18s;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
 }
@@ -1896,4 +2245,142 @@ body:not(.app-ready) .panel-fab {
         padding-top: env(safe-area-inset-top, 0px);
     }
 }
+
+/* ============================================
+   天气关怀区 — Weather Care Section (v3.0)
+   ============================================ */
+
+/* 关怀专属色变量 — 全部跟主题变量挂钩，不再硬编码 */
+:root {
+    /* 标签色 / 穿衣文字：跟随主色（默认黑客绿） */
+    --care-warm:    var(--accent-primary);
+    /* 生活提示文字：跟随青色（各主题均有定义） */
+    --care-amber:   var(--accent-cyan);
+
+    /* 温度级别色 — 保留有辨识度的固定色，不影响排版 */
+    --care-freeze:  #66ccff;   /* 极寒：冰蓝（固定，语义色） */
+    --care-cold:    #99ddff;   /* 偏冷：浅蓝 */
+    --care-cool:    var(--accent-bright);   /* 凉爽：跟随亮色 */
+    --care-comfort: var(--accent-primary);  /* 舒适：跟随主色 */
+    --care-warm-h:  var(--accent-pink);     /* 偏热：跟随粉/品红 */
+    --care-hot:     #ff8866;   /* 高温：暖橙红（固定，语义色） */
+}
+
+/* 关怀区容器 */
+.weather-care-section {
+    margin-top: 12px;
+    animation: none;
+    overflow: hidden;
+}
+
+.weather-care-section.care-animate {
+    animation: care-fade-in 0.6s ease forwards;
+}
+
+/* 分隔线 */
+.care-divider {
+    height: 1px;
+    background: linear-gradient(
+        to right,
+        transparent,
+        var(--glass-border-bright) 20%,
+        var(--glass-border-bright) 80%,
+        transparent
+    );
+    opacity: 0.6;
+    margin-bottom: 10px;
+}
+
+/* 关怀行布局 */
+.care-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.care-tips-row {
+    align-items: flex-start;
+}
+
+/* 标签（OUTFIT / ADVISORY）*/
+.care-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--care-label);
+    opacity: 1;
+    letter-spacing: 0.12em;
+    flex-shrink: 0;
+    padding-top: 1px;
+    min-width: 56px;
+    text-align: right;
+}
+
+/* 穿衣建议文字 */
+.weather-advice-text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--care-text);
+    line-height: 1.5;
+    flex: 1;
+}
+
+/* 温度级别颜色 */
+.care-level-freeze { color: var(--care-freeze); }
+.care-level-cold   { color: var(--care-cold); }
+.care-level-cool   { color: var(--care-cool); }
+.care-level-comfort{ color: var(--care-comfort); }
+.care-level-warm   { color: var(--care-warm-h); }
+.care-level-hot    { color: var(--care-hot); }
+
+/* 生活提示列表 */
+.weather-tips-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+}
+
+.weather-tip-item {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--care-tips);
+    line-height: 1.5;
+    opacity: 1;
+}
+
+/* 淡入动画 */
+@keyframes care-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 移动端：字号略微调大 */
+@media (max-width: 768px) {
+    .weather-advice-text,
+    .weather-tip-item {
+        font-size: 12px;
+    }
+    .care-label {
+        font-size: 9px;
+        min-width: 52px;
+    }
+}
+
+/* ── 移动端：主题切换按钮恢复左下角 ── */
+@media (max-width: 768px) {
+    .theme-toggle {
+        top: auto;
+        bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+        left: 14px;
+    }
+}
+
 
