@@ -1,0 +1,1899 @@
+/* ============================================
+   WEATHER TERMINAL - Cyberpunk Style
+   双主题系统：黑客模式(绿黑) + 极光模式(蓝白)
+   ============================================ */
+
+/* ============================================
+   主题变量定义
+   ============================================ */
+
+/* 默认主题：黑客模式（纯黑+黑客绿） */
+:root {
+    /* 核心色彩 - 纯黑背景 */
+    --bg-primary: #000000;
+    --bg-secondary: #0a0a0a;
+    --bg-tertiary: #111111;
+    
+    /* 霓虹主色 - 纯正黑客绿 */
+    --accent-primary: #00FF00;
+    --accent-secondary: #00cc00;
+    --accent-dim: #003300;
+    --accent-bright: #66ff66;
+    --accent-cyan: #00ffff;
+    --accent-pink: #FF00FF;   /* 洋红：故障强调色 */
+    
+    /* 文字色 - 黑客绿 */
+    --text-primary: #00FF00;
+    --text-secondary: #00FF00;
+    --text-dim: #00cc00;
+    --text-bright: #66ff66;
+    
+    /* 字体 - 赛博朋克终端三层字体栈 */
+    --font-mono: 'IBM Plex Mono', 'LXGW WenKai Mono', 'Consolas', 'Courier New', monospace;
+    --font-display: 'Orbitron', 'IBM Plex Mono', monospace;
+    --font-impact: 'Russo One', 'Orbitron', monospace; /* 冲击力大字 */
+    
+    /* 过渡 */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s ease;
+    
+    /* 磨砂玻璃效果 - 黑绿调 */
+    --glass-bg: rgba(0, 8, 0, 0.60);
+    --glass-bg-light: rgba(0, 15, 0, 0.70);
+    --glass-border: rgba(0, 255, 0, 0.20);
+    --glass-border-bright: rgba(0, 255, 0, 0.40);
+    --glass-blur: blur(30px);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 60px rgba(0, 255, 0, 0.06);
+    --glass-inner-glow: inset 0 1px 0 rgba(0, 255, 0, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+    
+    /* 地球颜色 - 纯黑+绿色点阵 */
+    --globe-bg: #000000;
+    --globe-land: #00FF00;
+    --globe-ocean: #001400;
+    --globe-glow: rgba(0, 255, 0, 0.4);
+    
+    /* 城市标记 */
+    --city-primary: #00FF00;
+    --city-selected: #FF00FF;  /* 洋红选中 */
+    --city-hover: #00ffff;
+    
+    /* 代码雨 - 纯黑拖影+黑客绿 */
+    --code-rain-color: #00FF00;
+    --code-rain-bg: rgba(0, 0, 0, 0.05);
+    
+    /* 主题名称 */
+    --theme-name: 'HACKER';
+}
+
+/* 极光模式（蓝白）- 参考赛博朋克风格 */
+[data-theme="aurora"] {
+    /* 核心色彩 - 赛博蓝 */
+    --bg-primary: #165DFF;
+    --bg-secondary: #1250e6;
+    --bg-tertiary: #0d44cc;
+    
+    /* 霓虹主色 - 白色为主，形成强烈蓝白对比 */
+    --accent-primary: #ffffff;
+    --accent-secondary: #e8f0ff;
+    --accent-dim: #7aa3ff;
+    --accent-bright: #ffffff;
+    --accent-cyan: #00d4ff;
+    --accent-pink: #ff6b9d;   /* 粉红（原琥珀金统一改为粉红） */
+    
+    /* 文字色 - 白色 */
+    --text-primary: #ffffff;
+    --text-secondary: #e8f0ff;
+    --text-dim: rgba(255, 255, 255, 0.75);
+    --text-bright: #ffffff;
+    
+    /* 磨砂玻璃效果 - 蓝色调 */
+    --glass-bg: rgba(22, 93, 255, 0.45);
+    --glass-bg-light: rgba(22, 93, 255, 0.60);
+    --glass-border: rgba(255, 255, 255, 0.25);
+    --glass-border-bright: rgba(255, 255, 255, 0.45);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 60px rgba(255, 255, 255, 0.15);
+    --glass-inner-glow: inset 0 1px 0 rgba(255, 255, 255, 0.20), inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    
+    /* 地球颜色 - 赛博蓝背景，白色点阵，白色光晕 */
+    --globe-bg: #165DFF;
+    --globe-land: #ffffff;
+    --globe-ocean: #165DFF;
+    --globe-glow: rgba(255, 255, 255, 0.5);
+    
+    /* 城市标记 */
+    --city-primary: #ffffff;
+    --city-selected: #FFC107;  /* 琥珀金选中 */
+    --city-hover: #FFD740;     /* 亮琥珀悬停 */
+    --city-ticker-color: #ff6b9d;  /* 城市选中标记色：粉红（ticker 文字已改用 --accent-dim 蓝灰） */
+    
+    /* 代码雨 - 白色字符，赛博蓝半透明背景 */
+    --code-rain-color: #ffffff;
+    --code-rain-bg: rgba(22, 93, 255, 0.05);
+    
+    /* 主题名称 */
+    --theme-name: 'AURORA';
+}
+
+/* VOID 模式（深紫×品红）- 赛博朋克故障美学 */
+[data-theme="void"] {
+    /* 核心色彩 - 极深紫黑 */
+    --bg-primary: #080010;
+    --bg-secondary: #0f0020;
+    --bg-tertiary: #160030;
+
+    /* 霓虹主色 - 高饱和品紫 */
+    --accent-primary: #cc00ff;
+    --accent-secondary: #9900cc;
+    --accent-dim: #330044;
+    --accent-bright: #ee66ff;
+    --accent-cyan: #00ffff;    /* 青色：RGB故障互补色 */
+    --accent-pink: #ff00cc;    /* 品红：故障偏移强调色 */
+
+    /* 文字色 */
+    --text-primary: #cc00ff;
+    --text-secondary: #cc00ff;
+    --text-dim: #9900cc;
+    --text-bright: #ee66ff;
+
+    /* 字体 - VOID 赛博朋克终端三层字体栈（与全局共享，此处可按主题微调） */
+    --font-mono: 'IBM Plex Mono', 'LXGW WenKai Mono', 'Consolas', 'Courier New', monospace;
+    --font-display: 'Orbitron', 'IBM Plex Mono', monospace;
+    --font-impact: 'Russo One', 'Orbitron', monospace;
+
+    /* 过渡 */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s ease;
+
+    /* 磨砂玻璃效果 - 深紫调 */
+    --glass-bg: rgba(20, 0, 40, 0.55);
+    --glass-bg-light: rgba(20, 0, 40, 0.70);
+    --glass-border: rgba(204, 0, 255, 0.22);
+    --glass-border-bright: rgba(204, 0, 255, 0.42);
+    --glass-blur: blur(30px);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.85), 0 0 60px rgba(204, 0, 255, 0.08);
+    --glass-inner-glow: inset 0 1px 0 rgba(204, 0, 255, 0.18), inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+
+    /* 地球颜色 - 深紫背景+品紫点阵 */
+    --globe-bg: #080010;
+    --globe-land: #cc00ff;
+    --globe-ocean: #120020;
+    --globe-glow: rgba(204, 0, 255, 0.45);
+
+    /* 城市标记 */
+    --city-primary: #cc00ff;
+    --city-selected: #00ffff;  /* 青色：RGB故障互补 */
+    --city-hover: #ff00cc;     /* 品红：故障偏移 */
+
+    /* 代码雨 */
+    --code-rain-color: #cc00ff;
+    --code-rain-bg: rgba(8, 0, 16, 0.05);
+
+    /* 主题名称 */
+    --theme-name: 'VOID';
+}
+
+/* VOID 主题：CRT 扫描线叠层 */
+[data-theme="void"] body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0) 0px,
+        rgba(0, 0, 0, 0) 1px,
+        rgba(0, 0, 0, 0.20) 2px,
+        rgba(0, 0, 0, 0.20) 2px
+    );
+    animation: void-flicker 10s infinite;
+}
+
+/* VOID 主题：屏幕边缘暗角（CRT桶形效果模拟） */
+[data-theme="void"] body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9998;
+    background: radial-gradient(
+        ellipse at center,
+        transparent 60%,
+        rgba(0, 0, 0, 0.60) 100%
+    );
+}
+
+@keyframes void-flicker {
+    0%, 96%, 100% { opacity: 1; }
+    97%  { opacity: 0.91; }
+    98%  { opacity: 0.97; }
+    99%  { opacity: 0.88; }
+}
+
+/* VOID 主题：欢迎页代码雨透明度 */
+[data-theme="void"] .welcome-code-rain {
+    opacity: 0.28;
+}
+
+/* ── VOID 专属：CRT 扫描线 canvas 层 ── */
+/* 默认隐藏；JS (VoidCRT.init) 在 VOID 主题时设 display:block */
+.void-scanlines-canvas {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;          /* 代码雨(z-index:0/1) 之上，欢迎内容(z-index:2) 之下 */
+}
+
+/* ── VOID 专属：轻微桶形畸变（CRT 弧面玻璃感） ── */
+[data-theme="void"] #welcome-screen {
+    transform: perspective(800px) rotateX(1deg);
+    border-radius: 14px / 22px;   /* 水平/垂直椭圆弧度，模拟 CRT 玻璃边缘 */
+    overflow: hidden;             /* 配合 border-radius 裁切内容 */
+    /* 平滑过渡，避免主题切换时画面突跳 */
+    transition: transform 0.4s ease, border-radius 0.4s ease;
+}
+
+/* 非 VOID 主题恢复 welcome-screen 形状 */
+#welcome-screen {
+    transition: transform 0.4s ease, border-radius 0.4s ease;
+}
+
+/* VOID 主题：自定义光标（品紫） */
+[data-theme="void"] html,
+[data-theme="void"] body,
+[data-theme="void"] {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><line x1="8" y1="0" x2="8" y2="6" stroke="%23cc00ff" stroke-width="1.5"/><line x1="8" y1="10" x2="8" y2="16" stroke="%23cc00ff" stroke-width="1.5"/><line x1="0" y1="8" x2="6" y2="8" stroke="%23cc00ff" stroke-width="1.5"/><line x1="10" y1="8" x2="16" y2="8" stroke="%23cc00ff" stroke-width="1.5"/></svg>') 8 8, crosshair;
+}
+
+[data-theme="void"] a,
+[data-theme="void"] button,
+[data-theme="void"] .start-btn,
+[data-theme="void"] .city-ticker-item,
+[data-theme="void"] input[type="text"],
+[data-theme="void"] .terminal-input,
+[data-theme="void"] .glass-panel,
+[data-theme="void"] .panel-section,
+[data-theme="void"] .theme-toggle {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="8" stroke="%23cc00ff" stroke-width="2"/><line x1="12" y1="16" x2="12" y2="22" stroke="%23cc00ff" stroke-width="2"/><line x1="2" y1="12" x2="8" y2="12" stroke="%23cc00ff" stroke-width="2"/><line x1="16" y1="12" x2="22" y2="12" stroke="%23cc00ff" stroke-width="2"/><rect x="8" y="8" width="8" height="8" fill="%23cc00ff" opacity="0.3"/></svg>') 12 12, pointer;
+}
+
+[data-theme="void"] .start-btn:hover,
+[data-theme="void"] button:hover,
+[data-theme="void"] .theme-toggle:hover {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" fill="%23cc00ff" opacity="0.2" stroke="%23cc00ff" stroke-width="2"/><rect x="8" y="8" width="8" height="8" fill="%23cc00ff"/></svg>') 12 12, pointer;
+}
+
+/* 地球画布 - 品紫圆形准星 */
+[data-theme="void"] #earth-canvas {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="8" fill="none" stroke="%23cc00ff" stroke-width="1.5"/><circle cx="16" cy="16" r="2" fill="%23cc00ff"/><line x1="16" y1="4" x2="16" y2="10" stroke="%23cc00ff" stroke-width="1.5"/><line x1="16" y1="22" x2="16" y2="28" stroke="%23cc00ff" stroke-width="1.5"/><line x1="4" y1="16" x2="10" y2="16" stroke="%23cc00ff" stroke-width="1.5"/><line x1="22" y1="16" x2="28" y2="16" stroke="%23cc00ff" stroke-width="1.5"/></svg>') 16 16, crosshair;
+}
+
+/* 地球画布拖拽 - 品红抓取（RGB故障互补色） */
+[data-theme="void"] #earth-canvas:active {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="10" fill="none" stroke="%23ff00cc" stroke-width="2"/><circle cx="16" cy="16" r="4" fill="%23ff00cc"/><line x1="16" y1="2" x2="16" y2="8" stroke="%23ff00cc" stroke-width="2"/><line x1="16" y1="24" x2="16" y2="30" stroke="%23ff00cc" stroke-width="2"/><line x1="2" y1="16" x2="8" y2="16" stroke="%23ff00cc" stroke-width="2"/><line x1="24" y1="16" x2="30" y2="16" stroke="%23ff00cc" stroke-width="2"/></svg>') 16 16, grabbing;
+}
+
+/* 文本输入 - 品紫 I 型光标 */
+[data-theme="void"] .terminal-input,
+[data-theme="void"] input[type="text"],
+[data-theme="void"] .terminal-output {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 12 24"><rect x="4" y="2" width="4" height="20" fill="%23cc00ff" opacity="0.9"/><line x1="2" y1="2" x2="10" y2="2" stroke="%23cc00ff" stroke-width="1.5"/><line x1="2" y1="22" x2="10" y2="22" stroke="%23cc00ff" stroke-width="1.5"/></svg>') 6 12, text;
+}
+
+/* ============================================
+   VOID 主题 - Orbitron 字体排版强化
+   ============================================ */
+
+/* 大标题：加大字重 + 收紧字距（Orbitron 宽，需适当收） */
+[data-theme="void"] .logo-main {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    letter-spacing: 14px;
+    text-transform: uppercase;
+}
+
+[data-theme="void"] .logo-glow,
+[data-theme="void"] .logo-year {
+    font-family: 'Orbitron', monospace;
+    font-weight: 400;
+    letter-spacing: 12px;
+}
+
+/* 副标语：IBM Plex Mono + 斜体 = CRT 终端打印感 */
+[data-theme="void"] .welcome-subtitle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-style: italic;
+    letter-spacing: 4px;
+}
+
+[data-theme="void"] .welcome-tagline,
+[data-theme="void"] .welcome-footer {
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 2px;
+    opacity: 0.75;
+}
+
+/* 按钮：Orbitron 粗字重，突出冲击感 */
+[data-theme="void"] .start-btn {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    letter-spacing: 4px;
+}
+
+/* 加载文字 */
+[data-theme="void"] .loading-text {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    letter-spacing: 8px;
+}
+
+/* 顶栏终端标题 */
+[data-theme="void"] .terminal-title {
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 2px;
+}
+
+/* ============================================
+   Reset & Base
+   ============================================ */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    transition: background var(--transition-normal), color var(--transition-normal);
+}
+
+.hidden {
+    display: none !important;
+}
+
+::selection {
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+}
+
+/* ============================================
+   主题切换按钮 - 左下角，与 FAB 平齐
+   默认隐藏，仅 app-ready（地球页）后显示
+   ============================================ */
+.theme-toggle {
+    position: fixed;
+    /* 与 FAB 同 bottom，左右对称 */
+    bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+    left: 20px;
+    top: auto;
+    z-index: 1000;
+    /* 默认隐藏，app-ready 后才出现（与 FAB 同步） */
+    opacity: 0;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: opacity 0.3s ease, border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+/* app-ready 后随主内容页一起出现 */
+body.app-ready .theme-toggle {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.theme-toggle:hover {
+    border-color: var(--glass-border-bright);
+    box-shadow: 0 0 20px var(--globe-glow);
+}
+
+.theme-toggle-icon {
+    width: 20px;
+    height: 20px;
+    position: relative;
+}
+
+/* 太阳图标（黑客模式） */
+.theme-toggle-icon::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background: var(--accent-primary);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent-primary);
+    transition: all var(--transition-normal);
+}
+
+/* 月亮图标（极光模式） */
+[data-theme="aurora"] .theme-toggle-icon::before {
+    width: 8px;
+    height: 8px;
+    background: var(--accent-cyan);
+    box-shadow: 0 0 15px var(--accent-cyan);
+}
+
+.theme-toggle-text {
+    font-size: 10px;
+    color: var(--accent-primary);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color var(--transition-normal);
+}
+
+/* ============================================
+   赛博朋克鼠标光标 - 复古终端风格
+   ============================================ */
+
+/* 全局默认光标 */
+html, body {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" viewBox="0 0 16 24"><rect x="2" y="2" width="12" height="20" fill="%2300ff88" opacity="0.9"/><rect x="4" y="4" width="8" height="16" fill="%23000"/></svg>') 2 2, auto;
+}
+
+/* 可交互元素 */
+a, button, .start-btn, .city-ticker-item,
+input[type="text"], .terminal-input, 
+.glass-panel, .panel-section, .theme-toggle {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="8" stroke="%2300ff88" stroke-width="2"/><line x1="12" y1="16" x2="12" y2="22" stroke="%2300ff88" stroke-width="2"/><line x1="2" y1="12" x2="8" y2="12" stroke="%2300ff88" stroke-width="2"/><line x1="16" y1="12" x2="22" y2="12" stroke="%2300ff88" stroke-width="2"/><rect x="8" y="8" width="8" height="8" fill="%2300ff88" opacity="0.3"/></svg>') 12 12, pointer;
+}
+
+/* 按钮悬停 */
+.start-btn:hover, button:hover, .theme-toggle:hover {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" fill="%2300ff88" opacity="0.2" stroke="%2300ff88" stroke-width="2"/><rect x="8" y="8" width="8" height="8" fill="%2300ff88"/></svg>') 12 12, pointer;
+}
+
+/* 地球画布 */
+#earth-canvas {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="8" fill="none" stroke="%2300ff88" stroke-width="1.5"/><circle cx="16" cy="16" r="2" fill="%2300ff88"/><line x1="16" y1="4" x2="16" y2="10" stroke="%2300ff88" stroke-width="1.5"/><line x1="16" y1="22" x2="16" y2="28" stroke="%2300ff88" stroke-width="1.5"/><line x1="4" y1="16" x2="10" y2="16" stroke="%2300ff88" stroke-width="1.5"/><line x1="22" y1="16" x2="28" y2="16" stroke="%2300ff88" stroke-width="1.5"/></svg>') 16 16, crosshair;
+    z-index: 1;
+    pointer-events: auto;
+}
+
+#earth-canvas:active {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="10" fill="none" stroke="%2366ffbb" stroke-width="2"/><circle cx="16" cy="16" r="4" fill="%2366ffbb"/><line x1="16" y1="2" x2="16" y2="8" stroke="%2366ffbb" stroke-width="2"/><line x1="16" y1="24" x2="16" y2="30" stroke="%2366ffbb" stroke-width="2"/><line x1="2" y1="16" x2="8" y2="16" stroke="%2366ffbb" stroke-width="2"/><line x1="24" y1="16" x2="30" y2="16" stroke="%2366ffbb" stroke-width="2"/></svg>') 16 16, grabbing;
+}
+
+/* 文本输入 */
+.terminal-input, input[type="text"], .terminal-output {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 12 24"><rect x="4" y="2" width="4" height="20" fill="%2300ff88" opacity="0.8"/><line x1="2" y1="2" x2="10" y2="2" stroke="%2300ff88" stroke-width="1.5"/><line x1="2" y1="22" x2="10" y2="22" stroke="%2300ff88" stroke-width="1.5"/></svg>') 6 12, text;
+}
+
+/* ============================================
+   AURORA 主题专属鼠标光标（白色 + 冰蓝）
+   覆盖默认的黑客绿，与蓝白主题配色统一
+   ============================================ */
+
+/* 全局默认 */
+[data-theme="aurora"] html,
+[data-theme="aurora"] body,
+[data-theme="aurora"] {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" viewBox="0 0 16 24"><rect x="2" y="2" width="12" height="20" fill="%23ffffff" opacity="0.95"/><rect x="4" y="4" width="8" height="16" fill="%23165DFF"/></svg>') 2 2, auto;
+}
+
+/* 可交互元素 */
+[data-theme="aurora"] a,
+[data-theme="aurora"] button,
+[data-theme="aurora"] .start-btn,
+[data-theme="aurora"] .city-ticker-item,
+[data-theme="aurora"] input[type="text"],
+[data-theme="aurora"] .terminal-input,
+[data-theme="aurora"] .glass-panel,
+[data-theme="aurora"] .panel-section,
+[data-theme="aurora"] .theme-toggle {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="8" stroke="%23ffffff" stroke-width="2"/><line x1="12" y1="16" x2="12" y2="22" stroke="%23ffffff" stroke-width="2"/><line x1="2" y1="12" x2="8" y2="12" stroke="%23ffffff" stroke-width="2"/><line x1="16" y1="12" x2="22" y2="12" stroke="%23ffffff" stroke-width="2"/><rect x="8" y="8" width="8" height="8" fill="%2300d4ff" opacity="0.4"/></svg>') 12 12, pointer;
+}
+
+/* 按钮悬停 */
+[data-theme="aurora"] .start-btn:hover,
+[data-theme="aurora"] button:hover,
+[data-theme="aurora"] .theme-toggle:hover {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" fill="%2300d4ff" opacity="0.25" stroke="%23ffffff" stroke-width="2"/><rect x="8" y="8" width="8" height="8" fill="%23ffffff"/></svg>') 12 12, pointer;
+}
+
+/* 地球画布 */
+[data-theme="aurora"] #earth-canvas {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="8" fill="none" stroke="%23ffffff" stroke-width="1.5"/><circle cx="16" cy="16" r="2" fill="%23ffffff"/><line x1="16" y1="4" x2="16" y2="10" stroke="%23ffffff" stroke-width="1.5"/><line x1="16" y1="22" x2="16" y2="28" stroke="%23ffffff" stroke-width="1.5"/><line x1="4" y1="16" x2="10" y2="16" stroke="%23ffffff" stroke-width="1.5"/><line x1="22" y1="16" x2="28" y2="16" stroke="%23ffffff" stroke-width="1.5"/></svg>') 16 16, crosshair;
+}
+
+[data-theme="aurora"] #earth-canvas:active {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="10" fill="none" stroke="%2300d4ff" stroke-width="2"/><circle cx="16" cy="16" r="4" fill="%2300d4ff"/><line x1="16" y1="2" x2="16" y2="8" stroke="%2300d4ff" stroke-width="2"/><line x1="16" y1="24" x2="16" y2="30" stroke="%2300d4ff" stroke-width="2"/><line x1="2" y1="16" x2="8" y2="16" stroke="%2300d4ff" stroke-width="2"/><line x1="24" y1="16" x2="30" y2="16" stroke="%2300d4ff" stroke-width="2"/></svg>') 16 16, grabbing;
+}
+
+/* 文本输入 */
+[data-theme="aurora"] .terminal-input,
+[data-theme="aurora"] input[type="text"],
+[data-theme="aurora"] .terminal-output {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 12 24"><rect x="4" y="2" width="4" height="20" fill="%23ffffff" opacity="0.9"/><line x1="2" y1="2" x2="10" y2="2" stroke="%23ffffff" stroke-width="1.5"/><line x1="2" y1="22" x2="10" y2="22" stroke="%23ffffff" stroke-width="1.5"/></svg>') 6 12, text;
+}
+
+/* ============================================
+   欢迎界面
+   ============================================ */
+.welcome-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    overflow: hidden;
+    transition: background var(--transition-normal);
+}
+
+.welcome-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(ellipse at 50% 50%, var(--glass-border) 0%, transparent 70%),
+        linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    transition: background var(--transition-normal);
+}
+
+.welcome-map-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.15;
+    overflow: hidden;
+}
+
+/* 欢迎页代码雨 Canvas */
+.welcome-code-rain {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.28;          /* HACKER 主题默认透明度 */
+    pointer-events: none;   /* 不拦截点击 */
+    z-index: 1;
+}
+
+[data-theme="aurora"] .welcome-code-rain {
+    opacity: 0.18;          /* AURORA 蓝底适当降低，避免遮主体 */
+}
+
+.ascii-world-map {
+    width: 200%;
+    height: 100%;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    line-height: 10px;
+    color: var(--accent-primary);
+    white-space: pre;
+    opacity: 0.3;
+    animation: scrollMap 60s linear infinite;
+}
+
+@keyframes scrollMap {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.welcome-scanlines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.1) 2px,
+        rgba(0, 0, 0, 0.1) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+.welcome-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.welcome-logo {
+    margin-bottom: 20px;
+}
+
+.logo-glow {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 24px;
+    color: var(--accent-dim);
+    letter-spacing: 15px;
+    margin-bottom: 5px;
+    text-shadow: 0 0 20px var(--accent-primary);
+}
+
+.logo-main {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 72px;
+    color: var(--accent-primary);
+    letter-spacing: 20px;
+    text-shadow: 
+        0 0 10px var(--accent-primary),
+        0 0 20px var(--accent-primary),
+        0 0 40px var(--accent-secondary);
+    animation: logoGlow 2s ease-in-out infinite alternate;
+    transition: color var(--transition-normal), text-shadow var(--transition-normal);
+}
+
+@keyframes logoGlow {
+    from {
+        text-shadow: 
+            0 0 10px var(--accent-primary),
+            0 0 20px var(--accent-primary),
+            0 0 40px var(--accent-secondary);
+    }
+    to {
+        text-shadow: 
+            0 0 20px var(--accent-primary),
+            0 0 40px var(--accent-primary),
+            0 0 60px var(--accent-bright);
+    }
+}
+
+.logo-year {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--accent-dim);
+    letter-spacing: 30px;
+    margin-top: 10px;
+}
+
+.welcome-subtitle {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 5px;
+    margin-bottom: 5px;
+}
+
+.welcome-tagline {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent-dim);
+    letter-spacing: 3px;
+    opacity: 0.6;
+}
+
+.welcome-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.divider-line {
+    width: 100px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+}
+
+.divider-icon {
+    color: var(--accent-primary);
+    margin: 0 15px;
+    font-size: 12px;
+}
+
+.start-btn {
+    position: relative;
+    padding: 15px 50px;
+    font-family: var(--font-display);
+    font-size: 16px;
+    letter-spacing: 3px;
+    color: var(--accent-primary);
+    background: transparent;
+    border: 2px solid var(--accent-primary);
+    overflow: hidden;
+    transition: all var(--transition-normal);
+}
+
+.start-btn:hover {
+    background: var(--glass-bg);
+    box-shadow: 
+        0 0 20px var(--globe-glow),
+        inset 0 0 20px var(--glass-border);
+    transform: scale(1.02);
+}
+
+.start-btn:active {
+    transform: scale(0.98);
+}
+
+.btn-text {
+    display: block;
+    font-size: 14px;
+    color: var(--accent-primary);
+}
+
+.btn-jp {
+    display: block;
+    font-size: 10px;
+    color: var(--accent-dim);
+    margin-top: 5px;
+    letter-spacing: 2px;
+}
+
+.btn-glitch {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--glass-border),
+        transparent
+    );
+    animation: btnGlitch 3s ease-in-out infinite;
+}
+
+@keyframes btnGlitch {
+    0%, 90%, 100% { left: -100%; }
+    95% { left: 100%; }
+}
+
+.welcome-footer {
+    margin-top: 40px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent-dim);
+    letter-spacing: 3px;
+}
+
+.footer-blink {
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* Welcome Decorations */
+.welcome-decorations {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.deco-line {
+    position: absolute;
+    background: var(--accent-dim);
+    opacity: 0.3;
+}
+
+.deco-1 { top: 20%; left: 0; width: 30%; height: 1px; }
+.deco-2 { bottom: 30%; right: 0; width: 25%; height: 1px; }
+.deco-3 { top: 0; left: 40%; width: 1px; height: 15%; }
+
+.deco-circle {
+    position: absolute;
+    border: 1px solid var(--accent-dim);
+    border-radius: 50%;
+    opacity: 0.2;
+}
+
+.deco-circle-1 { top: 10%; right: 10%; width: 100px; height: 100px; }
+.deco-circle-2 { bottom: 15%; left: 5%; width: 60px; height: 60px; }
+
+/* ============================================
+   加载界面 — 代码雨过渡
+   ============================================ */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* 降级黑色兜底，防止主题未初始化时出现灰色 */
+    background: #000000;
+    background: var(--bg-primary, #000000);
+    z-index: 200;
+    overflow: hidden;
+    transition: opacity 0.55s ease;
+}
+
+.loading-overlay.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* 全屏代码雨 Canvas */
+.loading-rain-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* ── 顶部文字（项目标题）：使用选中城市标记色 ── */
+.loading-top-text {
+    position: absolute;
+    top: calc(20px + env(safe-area-inset-top, 0px));
+    left: 20px;
+    z-index: 2;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 16px;
+    color: var(--city-selected, #FF00FF);
+    text-shadow: 0 0 6px var(--city-selected, #FF00FF);
+    letter-spacing: 2px;
+    white-space: nowrap;
+}
+
+.loading-prompt {
+    opacity: 0.7;
+}
+
+/* 光标闪烁 */
+.loading-cursor {
+    animation: loadingCursorBlink 1s step-end infinite;
+}
+
+@keyframes loadingCursorBlink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
+
+
+
+/* aurora 主题加载页背景：与系统主题蓝色一致 */
+[data-theme="aurora"] .loading-overlay {
+    background: var(--bg-primary);
+}
+
+/* FAB 键盘按钮：默认隐藏，仅主内容页（app-ready）移动端显示 */
+.panel-fab {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    body.app-ready .panel-fab {
+        display: flex !important;
+    }
+}
+
+/* ============================================
+   主界面
+   ============================================ */
+.main-app {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-primary);
+}
+
+/* Header */
+.terminal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--glass-border);
+    z-index: 10;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    background: var(--accent-primary);
+    border-radius: 50%;
+    animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 5px var(--accent-primary); }
+    50% { opacity: 0.5; box-shadow: 0 0 10px var(--accent-primary); }
+}
+
+.status-text {
+    font-size: 10px;
+    color: var(--accent-primary);
+    letter-spacing: 2px;
+}
+
+.header-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.terminal-title {
+    font-family: var(--font-display);
+    font-size: 12px;
+    color: var(--accent-dim);
+    letter-spacing: 3px;
+}
+
+.header-right .header-time {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+}
+
+/* City Ticker */
+.city-ticker {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 8px 0;
+    overflow: hidden;
+}
+
+
+
+
+
+
+.city-ticker-track {
+    display: flex;
+    gap: 40px;
+    animation: tickerScroll 30s linear infinite;
+}
+
+@keyframes tickerScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.city-ticker-item {
+    font-size: 10px;
+    color: var(--accent-dim);
+    letter-spacing: 2px;
+    white-space: nowrap;
+    transition: color var(--transition-fast);
+}
+
+/* AURORA：ticker 文字改为蓝灰，与 --accent-dim 统一 */
+[data-theme="aurora"] .city-ticker-item {
+    color: var(--accent-dim, #7aa3ff);
+}
+
+.city-ticker-item:hover {
+    color: var(--accent-primary);
+}
+
+/* Main Visual */
+.main-visual {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+}
+
+/* 背景层：代码雨 */
+.code-rain-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.15;
+}
+
+/* 背景层：城市统计 - 左下角往上一格 */
+.city-stats-bg {
+    position: fixed;
+    bottom: 60px;
+    left: 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-primary);
+    letter-spacing: 1px;
+    z-index: 10;
+    opacity: 0.7;
+    text-shadow: 0 0 5px currentColor;
+    pointer-events: none;
+}
+
+/* AURORA：城市统计文字改为粉红，与选中标记色统一 */
+[data-theme="aurora"] .city-stats-bg {
+    color: #ff6b9d;
+}
+
+/* Earth Fullscreen - 地球区域居中显示 */
+.earth-fullscreen {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+/* 地球画布 - 圆形 + 光晕（参考代码） */
+#earth-canvas {
+    display: block;
+    border-radius: 50%;
+}
+
+/* Aurora主题 - 白色光晕（参考代码） */
+[data-theme="aurora"] #earth-canvas {
+    box-shadow:
+        0 0 100px rgba(255, 255, 255, 0.4),
+        0 0 150px rgba(255, 255, 255, 0.2);
+}
+
+/* Void主题 - 品紫+品红双层光晕（赛博朋克故障感） */
+[data-theme="void"] #earth-canvas {
+    box-shadow:
+        0 0 100px rgba(204, 0, 255, 0.5),
+        0 0 180px rgba(204, 0, 255, 0.25),
+        0 0 260px rgba(255, 0, 204, 0.12);
+}
+
+/* Hacker主题 - 纯正黑客绿双层光晕（参考代码） */
+#earth-canvas {
+    box-shadow:
+        0 0 100px rgba(0, 255, 0, 0.4),
+        0 0 150px rgba(0, 255, 0, 0.2);
+}
+
+.earth-controls-hint {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    font-size: 10px;
+    color: var(--accent-dim);
+    letter-spacing: 2px;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* ============================================
+   Glass Panel - 磨砂玻璃效果
+   ============================================ */
+.glass-panel {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 300px;
+    max-height: calc(100% - 40px);
+    z-index: 100;
+    
+    background: 
+        linear-gradient(135deg, var(--glass-border) 0%, transparent 50%),
+        var(--glass-bg);
+    
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    
+    box-shadow: 
+        var(--glass-shadow),
+        var(--glass-inner-glow),
+        0 0 0 1px rgba(0, 0, 0, 0.3);
+    
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    
+    transition: all var(--transition-normal);
+}
+
+.glass-panel:hover {
+    background: 
+        linear-gradient(135deg, var(--glass-border-bright) 0%, transparent 50%),
+        var(--glass-bg-light);
+    border-color: var(--glass-border-bright);
+    box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.6),
+        0 0 80px var(--globe-glow),
+        var(--glass-inner-glow),
+        0 0 0 1px rgba(0, 0, 0, 0.4);
+}
+
+.glass-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--accent-primary), 
+        transparent
+    );
+}
+
+.glass-panel::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--glass-border-bright), 
+        transparent
+    );
+}
+
+.panel-section {
+    padding: 16px;
+    border-bottom: 1px solid var(--glass-border);
+    position: relative;
+}
+
+.panel-section:last-child {
+    border-bottom: none;
+}
+
+.panel-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 15px;
+    right: 15px;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--glass-border), 
+        transparent
+    );
+}
+
+.section-label {
+    font-size: 10px;
+    color: var(--accent-dim);
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+/* Input Section */
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--glass-border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    transition: all var(--transition-fast);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+    pointer-events: auto !important;
+}
+
+.input-wrapper:focus-within {
+    border-color: var(--accent-primary);
+    box-shadow: 
+        inset 0 1px 3px rgba(0, 0, 0, 0.3),
+        0 0 15px var(--globe-glow);
+}
+
+.prompt {
+    color: var(--accent-primary);
+    margin-right: 10px;
+    font-size: 14px;
+    text-shadow: 0 0 10px var(--accent-primary);
+}
+
+.terminal-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    outline: none;
+    text-shadow: 0 0 5px var(--globe-glow);
+    pointer-events: auto !important;
+    -webkit-pointer-events: auto !important;
+    caret-color: var(--accent-primary);
+}
+
+.terminal-input:focus {
+    caret-color: var(--accent-primary);
+}
+
+.terminal-input::placeholder {
+    color: var(--accent-dim);
+    opacity: 0.6;
+}
+
+/* Weather Section */
+.weather-display {
+    text-align: center;
+}
+
+.weather-city {
+    font-size: 18px;
+    color: var(--accent-primary);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 15px var(--globe-glow);
+}
+
+.weather-temp {
+    font-family: var(--font-display);
+    font-size: 48px;
+    color: var(--text-primary);
+    line-height: 1;
+    margin-bottom: 15px;
+    text-shadow: 
+        0 0 20px var(--globe-glow),
+        0 0 40px var(--globe-glow);
+}
+
+.weather-details {
+    text-align: left;
+}
+
+.weather-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.weather-row:last-child {
+    border-bottom: none;
+}
+
+.weather-label {
+    font-size: 10px;
+    color: var(--accent-dim);
+    letter-spacing: 1px;
+}
+
+.weather-value {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* Output Section */
+.output-section {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.terminal-output {
+    flex: 1;
+    overflow-y: auto;
+    font-size: 11px;
+    line-height: 1.8;
+    padding-right: 5px;
+}
+
+.output-line {
+    padding: 3px 0;
+}
+
+.output-line .timestamp {
+    color: var(--accent-dim);
+    margin-right: 8px;
+}
+
+.output-line .message {
+    color: var(--text-dim);
+}
+
+.output-line .message.success {
+    color: var(--accent-primary);
+    text-shadow: 0 0 8px var(--globe-glow);
+}
+
+.output-line .message.error {
+    color: #ff6666;
+}
+
+/* Footer */
+.terminal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 10px 20px;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--glass-border);
+}
+
+.footer-item {
+    font-size: 10px;
+    color: var(--accent-dim);
+    letter-spacing: 2px;
+}
+
+.footer-divider {
+    color: var(--accent-dim);
+    opacity: 0.3;
+}
+
+/* ============================================
+   Holo Card Popup
+   ============================================ */
+.holo-card-popup {
+    position: fixed;
+    padding: 15px 20px;
+    
+    background: 
+        linear-gradient(135deg, var(--glass-border) 0%, transparent 50%),
+        var(--glass-bg);
+    
+    backdrop-filter: blur(35px);
+    -webkit-backdrop-filter: blur(35px);
+    
+    border: 1px solid var(--glass-border-bright);
+    border-radius: 10px;
+    
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.5),
+        0 0 60px var(--globe-glow),
+        inset 0 1px 0 var(--glass-border-bright);
+    
+    z-index: 1000;
+    pointer-events: none;
+    min-width: 180px;
+}
+
+.holo-card-popup::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20px;
+    right: 20px;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--accent-primary), 
+        transparent
+    );
+}
+
+.holo-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.holo-card-icon {
+    color: var(--accent-primary);
+    font-size: 12px;
+    text-shadow: 0 0 10px var(--accent-primary);
+}
+
+.holo-city-name {
+    font-size: 14px;
+    color: var(--accent-primary);
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px var(--globe-glow);
+}
+
+.holo-card-body {
+    font-size: 11px;
+}
+
+.holo-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+
+.holo-label {
+    color: var(--accent-dim);
+    letter-spacing: 1px;
+}
+
+.holo-value {
+    color: var(--text-secondary);
+}
+
+.holo-temp {
+    color: var(--accent-bright);
+    font-weight: 600;
+    text-shadow: 0 0 8px var(--globe-glow);
+}
+
+/* ============================================
+   Error Toast
+   ============================================ */
+.error-toast {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    background: rgba(40, 10, 10, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 50, 50, 0.3);
+    border-radius: 8px;
+    box-shadow: 
+        0 8px 30px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 100, 100, 0.1);
+    z-index: 2000;
+}
+
+.error-icon {
+    color: #ff5050;
+    font-size: 16px;
+    text-shadow: 0 0 10px rgba(255, 80, 80, 0.5);
+}
+
+#error-message {
+    color: #ff8080;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+/* ============================================
+   Scrollbar
+   ============================================ */
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--glass-border-bright);
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+
+/* ── CSS 变量：将 safe-area-inset-bottom 注入到 :root ──
+   JS 通过 getComputedStyle 读取 --sab 用于地球尺寸计算  */
+:root {
+    --sab: env(safe-area-inset-bottom, 0px);
+}
+
+/* ── touch-action 分区：防止地球手势与页面缩放冲突 ─────── */
+#main-app {
+    touch-action: pan-y;     /* 允许上下滚动，禁止双指缩放页面 */
+}
+.earth-fullscreen {
+    touch-action: none;      /* 地球区域保留全部触摸手势（旋转/捏合） */
+}
+.glass-panel {
+    touch-action: pan-y;     /* 面板内允许上下滚动 */
+}
+
+/* ── 768px：平板/大屏手机 ─────────────────────────────── */
+@media (max-width: 768px) {
+    .logo-main {
+        font-size: 48px;
+        letter-spacing: 10px;
+    }
+
+    .weather-temp {
+        font-size: 36px;
+    }
+
+    /* ── 顶部 header 简化：只保留右侧时间 ── */
+    .terminal-header {
+        padding: 6px 12px;
+        justify-content: flex-end;   /* 时间靠右对齐 */
+    }
+    .header-left,
+    .header-center {
+        display: none;               /* 隐藏 CONNECTED 和标题 */
+    }
+
+    /* ── 移动端：隐藏 city-ticker，city-stats-bg 接替其位置 ── */
+    .city-ticker {
+        display: none;
+    }
+
+    .city-stats-bg {
+        position: static;           /* 脱离 fixed，回到文档流 */
+        bottom: auto;
+        left: auto;
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        background: var(--bg-secondary);
+        border-bottom: 1px solid var(--glass-border);
+        padding: 6px 12px;
+        font-size: 10px;
+        text-align: center;
+        text-shadow: 0 0 5px currentColor;
+        pointer-events: none;
+    }
+
+    .theme-toggle {
+        /* 移动端左下角，与 FAB 同 bottom 平齐 */
+        bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+        left: 16px;
+        top: auto;
+        right: auto;
+        padding: 7px 9px;
+        gap: 0;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        justify-content: center;
+    }
+
+    /* 移动端隐藏文字，只保留图标 */
+    .theme-toggle .theme-toggle-text {
+        display: none;
+    }
+
+    /* ── 右侧滑入抽屉（覆盖桌面端定位） ── */
+    .glass-panel {
+        position: fixed !important;
+        top: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        left: auto !important;
+        width: 85vw !important;
+        max-width: 340px !important;
+        height: 100dvh !important;  /* dvh = dynamic viewport height，排除底部系统栏 */
+        max-height: none !important;
+        border-radius: 16px 0 0 16px !important;
+        padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+        overflow-y: auto;
+        /* 默认隐藏到右边缘之外 */
+        transform: translateX(105%) !important;
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        z-index: 900 !important;
+        will-change: transform;
+    }
+
+    /* 面板打开状态 */
+    .glass-panel.panel-open {
+        transform: translateX(0) !important;
+    }
+
+    /* 地球容器：移动端给底部安全区留出空间，防止被 Home Bar 遮挡 */
+    .earth-fullscreen {
+        padding-bottom: env(safe-area-inset-bottom, 20px);
+        box-sizing: border-box;
+    }
+}
+
+/* ── 480px：手机竖屏（iPhone 全系列） ─────────────────── */
+@media (max-width: 480px) {
+    .logo-main {
+        font-size: 36px;
+    }
+
+    .start-btn {
+        padding: 12px 30px;
+        font-size: 14px;
+    }
+}
+
+/* ============================================
+   移动端遮罩层（panel-overlay）
+   半透明黑膜，点击关闭右侧抽屉
+   ============================================ */
+.panel-overlay {
+    display: none;              /* 桌面端不显示 */
+    position: fixed;
+    inset: 0;
+    z-index: 899;               /* 低于 glass-panel(900)，高于地球内容 */
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .panel-overlay {
+        display: block;         /* 仅移动端启用 */
+    }
+    .panel-overlay--visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+/* ============================================
+   移动端浮动触发按钮（panel-fab）
+   右下角，点击开/关终端框
+   ============================================ */
+.panel-fab {
+    display: none;              /* 桌面端隐藏，@media 内覆盖为 flex */
+    position: fixed;
+    right: 20px;
+    bottom: calc(80px + env(safe-area-inset-bottom, 0px));  /* 上移，避开底部文字 */
+    z-index: 901;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    /* ── 透明磨砂玻璃质感，无边框 ── */
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    border: none;
+    color: var(--accent-primary, #00ff88);
+    font-size: 22px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    /* 仅保留外发光，无边框线 */
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.35),
+        0 0 14px color-mix(in srgb, var(--accent-primary, #00ff88) 22%, transparent);
+    transition: background 0.22s, box-shadow 0.22s, transform 0.18s, color 0.22s;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+@media (max-width: 768px) {
+    .panel-fab {
+        display: flex;
+    }
+}
+
+/* 欢迎屏 / 加载屏可见时，FAB 始终隐藏 */
+body:not(.app-ready) .panel-fab {
+    display: none !important;
+}
+
+.panel-fab:active,
+.panel-fab--active {
+    background: color-mix(in srgb, var(--accent-primary, #00ff88) 18%, transparent);
+    border-color: var(--accent-primary, #00ff88);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.15),
+        0 4px 24px rgba(0, 0, 0, 0.45),
+        0 0 20px color-mix(in srgb, var(--accent-primary, #00ff88) 35%, transparent);
+    transform: scale(0.92);
+}
+
+.panel-fab-icon {
+    line-height: 1;
+    pointer-events: none;
+}
+
+/* 各主题：box-shadow 光晕已通过 --accent-primary 自动跟随，无需单独覆盖 */
+
+
+
+
+
+
+/* ============================================
+   PWA — 安装提示条
+   ============================================ */
+.pwa-install-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); /* iPhone 底部安全区 */
+
+    background: rgba(10, 10, 10, 0.96);
+    border-top: 1px solid rgba(0, 255, 136, 0.4);
+    box-shadow: 0 -4px 24px rgba(0, 255, 136, 0.12);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    /* 入场动画 */
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+}
+
+/* 显示状态（JS 添加此 class） */
+.pwa-install-bar--visible {
+    transform: translateY(0);
+}
+
+/* 图标 */
+.pwa-install-bar__icon {
+    flex-shrink: 0;
+}
+.pwa-install-bar__icon img {
+    display: block;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+/* 文字区域 */
+.pwa-install-bar__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.pwa-install-bar__title {
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--primary-color, #00ff88);
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.pwa-install-bar__sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: rgba(200, 200, 200, 0.7);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 安装按钮 */
+.pwa-install-bar__btn {
+    flex-shrink: 0;
+    padding: 7px 18px;
+    background: transparent;
+    border: 1px solid var(--primary-color, #00ff88);
+    color: var(--primary-color, #00ff88);
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    border-radius: 3px;
+    text-transform: uppercase;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.pwa-install-bar__btn:hover,
+.pwa-install-bar__btn:focus-visible {
+    background: var(--primary-color, #00ff88);
+    color: #000;
+    box-shadow: 0 0 12px rgba(0, 255, 136, 0.5);
+    outline: none;
+}
+
+/* 关闭按钮 */
+.pwa-install-bar__dismiss {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: none;
+    color: rgba(200, 200, 200, 0.5);
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: color 0.2s, background 0.2s;
+    padding: 0;
+}
+.pwa-install-bar__dismiss:hover,
+.pwa-install-bar__dismiss:focus-visible {
+    color: rgba(255, 80, 80, 0.9);
+    background: rgba(255, 80, 80, 0.1);
+    outline: none;
+}
+
+/* VOID 主题：安装条配色跟随品紫 */
+[data-theme="void"] .pwa-install-bar {
+    border-top-color: rgba(204, 0, 255, 0.4);
+    box-shadow: 0 -4px 24px rgba(204, 0, 255, 0.12);
+}
+[data-theme="void"] .pwa-install-bar__title {
+    color: #cc00ff;
+}
+[data-theme="void"] .pwa-install-bar__btn {
+    border-color: #cc00ff;
+    color: #cc00ff;
+}
+[data-theme="void"] .pwa-install-bar__btn:hover {
+    background: #cc00ff;
+    color: #000;
+    box-shadow: 0 0 12px rgba(204, 0, 255, 0.5);
+}
+
+/* AURORA 主题：安装条配色跟随赛博蓝 */
+[data-theme="aurora"] .pwa-install-bar {
+    border-top-color: rgba(22, 93, 255, 0.4);
+    box-shadow: 0 -4px 24px rgba(22, 93, 255, 0.12);
+}
+[data-theme="aurora"] .pwa-install-bar__title {
+    color: #165dff;
+}
+[data-theme="aurora"] .pwa-install-bar__btn {
+    border-color: #165dff;
+    color: #165dff;
+}
+[data-theme="aurora"] .pwa-install-bar__btn:hover {
+    background: #165dff;
+    color: #fff;
+    box-shadow: 0 0 12px rgba(22, 93, 255, 0.5);
+}
+
+/* ============================================
+   PWA — 移动端 safe-area 全局适配
+   确保底部 fixed 元素不被 iPhone 底栏遮挡
+   ============================================ */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+    .glass-panel,
+    .city-ticker {
+        padding-bottom: calc(var(--glass-padding, 12px) + env(safe-area-inset-bottom, 0px));
+    }
+}
+
+/* standalone 模式下隐藏顶部浏览器 UI 占位 */
+@media (display-mode: standalone) {
+    body {
+        padding-top: env(safe-area-inset-top, 0px);
+    }
+}
+

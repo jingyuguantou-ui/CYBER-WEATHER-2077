@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Weather Terminal | Cyber Weather</title>
+
+    <!-- ══════════ PWA Meta ══════════ -->
+    <!-- 通用 -->
+    <meta name="theme-color" content="#00ff88">
+    <meta name="description" content="赛博朋克风格全球城市实时天气监测系统 CYBER WEATHER 2077">
+    <meta name="application-name" content="CYBER WEATHER 2077">
+
+    <!-- Android Chrome PWA -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- iOS Safari PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="天气终端">
+
+    <!-- Windows Tile / Edge -->
+    <meta name="msapplication-TileColor" content="#0a0a0a">
+    <meta name="msapplication-TileImage" content="icons/icon-144.png">
+    <meta name="msapplication-config" content="none">
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- 图标：通用 favicon -->
+    <link rel="icon" href="favicon/favicon.ico" sizes="any">
+    <link rel="icon" href="favicon/favicon.svg" type="image/svg+xml">
+    <link rel="icon" type="image/png" sizes="96x96"   href="favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+
+    <!-- iOS 专属 apple-touch-icon（不走 manifest，必须单独声明） -->
+    <link rel="apple-touch-icon" href="favicon/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+
+    <!-- iOS 启动画面（黑底 + 主题色） -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- iOS 启动图（Splash Screen）：覆盖主流机型分辨率 -->
+    <!-- iPhone SE / 8 -->
+    <link rel="apple-touch-startup-image" media="(device-width:375px) and (device-height:667px) and (-webkit-device-pixel-ratio:2)"
+          href="icons/icon-512.png">
+    <!-- iPhone X / XS / 11 Pro -->
+    <link rel="apple-touch-startup-image" media="(device-width:375px) and (device-height:812px) and (-webkit-device-pixel-ratio:3)"
+          href="icons/icon-512.png">
+    <!-- iPhone XR / 11 -->
+    <link rel="apple-touch-startup-image" media="(device-width:414px) and (device-height:896px) and (-webkit-device-pixel-ratio:2)"
+          href="icons/icon-512.png">
+    <!-- iPhone 12 / 13 / 14 -->
+    <link rel="apple-touch-startup-image" media="(device-width:390px) and (device-height:844px) and (-webkit-device-pixel-ratio:3)"
+          href="icons/icon-512.png">
+    <!-- iPhone 14 Pro / 15 -->
+    <link rel="apple-touch-startup-image" media="(device-width:393px) and (device-height:852px) and (-webkit-device-pixel-ratio:3)"
+          href="icons/icon-512.png">
+    <!-- iPhone 15 Plus / 15 Pro Max -->
+    <link rel="apple-touch-startup-image" media="(device-width:430px) and (device-height:932px) and (-webkit-device-pixel-ratio:3)"
+          href="icons/icon-512.png">
+    <!-- ══════════ /PWA Meta ══════════ -->
+
+    <!-- Fonts: Cyberpunk Terminal Stack -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Orbitron: 赛博几何大标题 / IBM Plex Mono: CRT 终端正文 / Russo One: 冲击力副标题 -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Russo+One&display=swap" rel="stylesheet">
+    <!-- LXGW WenKai Mono: 霞鹜文楷等宽（中文赛博终端）-->
+    <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-mono-webfont@1.7.0/style.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- ══ Anti-FOUC：CSS 加载后同步恢复主题，消除初始化撞色闪屏 ══ -->
+    <script>
+    (function(){
+        var t = localStorage.getItem('weather-theme');
+        if (t === 'aurora' || t === 'void') {
+            document.documentElement.setAttribute('data-theme', t);
+        }
+    })();
+    </script>
+</head>
+<body class="terminal-theme">
+
+    <!-- ══════════ PWA 安装提示条（JS 控制显示/隐藏） ══════════ -->
+    <div id="pwa-install-bar" class="pwa-install-bar" role="banner" aria-label="安装应用提示" hidden>
+        <div class="pwa-install-bar__icon">
+            <img src="icons/icon-96.png" width="40" height="40" alt="CYBER WEATHER 图标">
+        </div>
+        <div class="pwa-install-bar__text">
+            <span class="pwa-install-bar__title">CYBER WEATHER 2077</span>
+            <span class="pwa-install-bar__sub">安装到主屏幕，离线可用</span>
+        </div>
+        <button id="pwa-install-btn" class="pwa-install-bar__btn" type="button" aria-label="安装应用">
+            安装
+        </button>
+        <button id="pwa-install-dismiss" class="pwa-install-bar__dismiss" type="button" aria-label="关闭安装提示">
+            ✕
+        </button>
+    </div>
+    <!-- ══════════ /PWA 安装提示条 ══════════ -->
+
+    <!-- ==================== 欢迎界面（保持不变） ==================== -->
+    <div id="welcome-screen" class="welcome-screen">
+        <div class="welcome-bg"></div>
+        <div class="welcome-map-bg">
+            <div class="ascii-world-map" id="welcome-ascii-map"></div>
+        </div>
+        <!-- 代码雨背景层（位于地图之上、扫描线之下） -->
+        <canvas id="welcome-code-rain" class="welcome-code-rain"></canvas>
+        <!-- VOID 专属：CRT 扫描线 canvas 层（JS 动态绘制，默认隐藏） -->
+        <canvas id="void-scanlines" class="void-scanlines-canvas"></canvas>
+        <div class="welcome-scanlines"></div>
+        <div class="welcome-content">
+            <div class="welcome-logo">
+                <span class="logo-glow">CYBER</span>
+                <span class="logo-main">WEATHER</span>
+                <span class="logo-year">2077</span>
+            </div>
+            <div class="welcome-subtitle">全球城市实时天气系统</div>
+            <div class="welcome-tagline">GLOBAL WEATHER MONITORING SYSTEM</div>
+            
+            <div class="welcome-divider">
+                <span class="divider-line"></span>
+                <span class="divider-icon">◆</span>
+                <span class="divider-line"></span>
+            </div>
+            
+            <button id="start-btn" class="start-btn cyber-btn" type="button" onclick="handleStartClick()">
+                <span class="btn-text">初始化系统</span>
+                <span class="btn-jp">INITIALIZE SYSTEM</span>
+                <span class="btn-glitch"></span>
+            </button>
+            
+            <div class="welcome-footer">
+                <span class="footer-text">PUSH START BUTTON</span>
+                <span class="footer-blink">_</span>
+            </div>
+        </div>
+        
+        <div class="welcome-decorations">
+            <div class="deco-line deco-1"></div>
+            <div class="deco-line deco-2"></div>
+            <div class="deco-line deco-3"></div>
+            <div class="deco-circle deco-circle-1"></div>
+            <div class="deco-circle deco-circle-2"></div>
+        </div>
+    </div>
+    
+    <!-- ==================== 加载界面（代码雨过渡） ==================== -->
+    <div id="loading" class="loading-overlay hidden">
+        <!-- 全屏主代码雨 -->
+        <canvas id="loading-rain-canvas" class="loading-rain-canvas"></canvas>
+        <!-- 顶部：项目标题 -->
+        <div class="loading-top-text">
+            <span class="loading-prompt">&gt;</span> WEATHER TERMINAL
+            <span class="loading-cursor">_</span>
+        </div>
+
+    </div>
+
+    <!-- ==================== 主界面 ==================== -->
+    <div id="main-app" class="main-app hidden">
+        
+        <!-- 主题切换按钮 -->
+        <button class="theme-toggle" id="theme-toggle" title="切换主题">
+            <div class="theme-toggle-icon"></div>
+            <span class="theme-toggle-text">MODE</span>
+        </button>
+        
+        <!-- 顶部状态栏 -->
+        <header class="terminal-header">
+            <div class="header-left">
+                <span class="status-indicator"></span>
+                <span class="status-text">CONNECTED</span>
+            </div>
+            <div class="header-center">
+                <span class="terminal-title">WEATHER TERMINAL v2.0</span>
+            </div>
+            <div class="header-right">
+                <span id="header-time" class="header-time">--:--:--</span>
+            </div>
+        </header>
+
+        <!-- 城市滚动标签栏 -->
+        <div class="city-ticker">
+            <div class="city-ticker-track" id="city-ticker-track">
+                <span class="city-ticker-item" data-city="beijing">BEIJING</span>
+                <span class="city-ticker-item" data-city="shanghai">SHANGHAI</span>
+                <span class="city-ticker-item" data-city="tokyo">TOKYO</span>
+                <span class="city-ticker-item" data-city="new york">NEW YORK</span>
+                <span class="city-ticker-item" data-city="london">LONDON</span>
+                <span class="city-ticker-item" data-city="paris">PARIS</span>
+                <span class="city-ticker-item" data-city="sydney">SYDNEY</span>
+                <span class="city-ticker-item" data-city="dubai">DUBAI</span>
+                <span class="city-ticker-item" data-city="moscow">MOSCOW</span>
+                <span class="city-ticker-item" data-city="singapore">SINGAPORE</span>
+                <!-- 复制一份实现无缝滚动 -->
+                <span class="city-ticker-item" data-city="beijing">BEIJING</span>
+                <span class="city-ticker-item" data-city="shanghai">SHANGHAI</span>
+                <span class="city-ticker-item" data-city="tokyo">TOKYO</span>
+                <span class="city-ticker-item" data-city="new york">NEW YORK</span>
+                <span class="city-ticker-item" data-city="london">LONDON</span>
+                <span class="city-ticker-item" data-city="paris">PARIS</span>
+                <span class="city-ticker-item" data-city="sydney">SYDNEY</span>
+                <span class="city-ticker-item" data-city="dubai">DUBAI</span>
+                <span class="city-ticker-item" data-city="moscow">MOSCOW</span>
+                <span class="city-ticker-item" data-city="singapore">SINGAPORE</span>
+            </div>
+        </div>
+
+        <!-- 城市统计（桌面：fixed 左下角；移动端：接替 city-ticker 位置） -->
+        <div id="city-stats" class="city-stats-bg">CITIES: 0 | ●T1:0 ○T2:0 ·T3:0</div>
+
+        <!-- 主视觉区 -->
+        <main class="main-visual">
+            <!-- 背景层：代码雨 -->
+            <canvas id="code-rain-bg" class="code-rain-bg"></canvas>
+
+            <!-- ASCII 地图全屏 -->
+            <div class="earth-fullscreen">
+                <canvas id="earth-canvas"></canvas>
+                <div class="earth-controls-hint">
+                    <span>HOVER</span>
+                    <span>CLICK</span>
+                </div>
+            </div>
+
+            <!-- 右侧单面板（磨砂透明） -->
+            <aside class="glass-panel">
+                <!-- 命令输入 -->
+                <div class="panel-section input-section">
+                    <div class="section-label">QUERY</div>
+                    <div class="input-wrapper">
+                        <span class="prompt">&gt;</span>
+                        <input 
+                            type="text" 
+                            id="terminal-input" 
+                            class="terminal-input" 
+                            placeholder="type city name..."
+                            autocomplete="off"
+                            spellcheck="false"
+                            inputmode="search"
+                            enterkeyhint="search"
+                        >
+                    </div>
+                </div>
+                
+                <!-- 当前天气 -->
+                <div class="panel-section weather-section">
+                    <div class="section-label">CURRENT</div>
+                    <div class="weather-display" id="weather-display">
+                        <div class="weather-city">--</div>
+                        <div class="weather-temp">--°C</div>
+                        <div class="weather-details">
+                            <div class="weather-row">
+                                <span class="weather-label">HUMIDITY</span>
+                                <span class="weather-value" id="weather-humidity">--%</span>
+                            </div>
+                            <div class="weather-row">
+                                <span class="weather-label">WIND</span>
+                                <span class="weather-value" id="weather-wind">-- m/s</span>
+                            </div>
+                            <div class="weather-row">
+                                <span class="weather-label">CONDITION</span>
+                                <span class="weather-value" id="weather-desc">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 终端输出 -->
+                <div class="panel-section output-section">
+                    <div class="section-label">OUTPUT</div>
+                    <div id="terminal-output" class="terminal-output">
+                        <div class="output-line">
+                            <span class="message">System ready.</span>
+                        </div>
+                        <div class="output-line">
+                            <span class="message">Click city marker or type name.</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- 底部状态 -->
+        <footer class="terminal-footer">
+            <span class="footer-item">CYBER WEATHER 2077</span>
+            <span class="footer-divider">|</span>
+            <span class="footer-item">GLOBAL WEATHER MONITORING</span>
+            <span class="footer-divider">|</span>
+            <span id="footer-status" class="footer-item">READY</span>
+        </footer>
+
+    </div>
+
+    <!-- 全息信息卡片 -->
+    <div id="holo-card" class="holo-card-popup hidden">
+        <div class="holo-card-header">
+            <span class="holo-card-icon">◈</span>
+            <span id="holo-city-name" class="holo-city-name">--</span>
+        </div>
+        <div class="holo-card-body">
+            <div class="holo-row">
+                <span class="holo-label">COORDS</span>
+                <span id="holo-coords" class="holo-value">--</span>
+            </div>
+            <div class="holo-row">
+                <span class="holo-label">TEMP</span>
+                <span id="holo-temp" class="holo-value holo-temp">--°C</span>
+            </div>
+            <div class="holo-row">
+                <span class="holo-label">COND</span>
+                <span id="holo-condition" class="holo-value">--</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 错误提示 -->
+    <div id="error-toast" class="error-toast hidden">
+        <span class="error-icon">⚠</span>
+        <span id="error-message"></span>
+    </div>
+
+    <!-- ══════════ 移动端面板遮罩 & 浮动按钮（JS 控制显隐） ══════════ -->
+    <!-- 半透明遮罩：点击关闭右侧抽屉 -->
+    <div id="panel-overlay" class="panel-overlay" aria-hidden="true"></div>
+    <!-- 右下角浮动触发按钮：仅主内容页（地球页）显示 -->
+    <button id="panel-fab" class="panel-fab" type="button" aria-label="打开终端控制面板" aria-expanded="false">
+        <span class="panel-fab-icon">⌨</span>
+    </button>
+    <!-- ══════════ /移动端面板遮罩 & 浮动按钮 ══════════ -->
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/cities.js"></script>
+    <script src="js/continents.js"></script>
+    <script src="js/weather.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/bg-map.js"></script>
+    <script src="js/ascii-earth.js"></script>
+    <script src="js/terminal-ui.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/mobile-panel.js"></script>
+    <script src="js/pwa-install.js"></script>
+
+    <!-- ══════════ Service Worker 注册 ══════════ -->
+    <script>
+    (function () {
+        if (!('serviceWorker' in navigator)) return;
+
+        window.addEventListener('load', function () {
+            navigator.serviceWorker
+                .register('./sw.js', { scope: './' })
+                .then(function (reg) {
+                    console.log('[PWA] Service Worker 注册成功, scope:', reg.scope);
+
+                    // 检测到新版本 SW，自动激活
+                    reg.addEventListener('updatefound', function () {
+                        const newWorker = reg.installing;
+                        if (!newWorker) return;
+                        newWorker.addEventListener('statechange', function () {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                console.log('[PWA] 检测到新版本，已静默更新');
+                                newWorker.postMessage({ type: 'SKIP_WAITING' });
+                            }
+                        });
+                    });
+                })
+                .catch(function (err) {
+                    console.warn('[PWA] Service Worker 注册失败:', err);
+                });
+
+            // 新 SW 激活后刷新页面（让用户立即用上新缓存）
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', function () {
+                if (!refreshing) {
+                    refreshing = true;
+                    // 只在后台更新时静默刷新，不打扰用户当前操作
+                    // window.location.reload();
+                }
+            });
+        });
+    })();
+    </script>
+    <!-- ══════════ /Service Worker 注册 ══════════ -->
+</body>
+</html>
