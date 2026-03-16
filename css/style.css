@@ -17,7 +17,7 @@
     /* 霓虹主色 - 纯正黑客绿 */
     --accent-primary: #00FF00;
     --accent-secondary: #00cc00;
-    --accent-dim: #003300;
+    --accent-dim: #006600;
     --accent-bright: #66ff66;
     --accent-cyan: #00ffff;
     --accent-pink: #FF00FF;   /* 品红：故障强调色 */
@@ -80,7 +80,7 @@
     --bg-tertiary: #111111;
     --accent-primary: #00FF00;
     --accent-secondary: #00cc00;
-    --accent-dim: #003300;
+    --accent-dim: #006600;
     --accent-bright: #66ff66;
     --accent-cyan: #00ffff;
     --accent-pink: #FF00FF;
@@ -178,7 +178,7 @@
     /* 霓虹主色 - 高饱和品紫 */
     --accent-primary: #cc00ff;
     --accent-secondary: #9900cc;
-    --accent-dim: #330044;
+    --accent-dim: #6600aa;
     --accent-bright: #ee66ff;
     --accent-cyan: #00ffff;    /* 青色：RGB故障互补色 */
     --accent-pink: #ff00cc;    /* 品红：故障偏移强调色 */
@@ -439,7 +439,7 @@
     /* 主色 - 印刷油墨黑 */
     --accent-primary: #0a0a0a;
     --accent-secondary: #222222;
-    --accent-dim: #cccccc;
+    --accent-dim: #888888;
     --accent-bright: #000000;
     --accent-cyan: #555555;      /* 中深灰：辅助色 */
     --accent-pink: #999999;      /* 浅灰：弱化强调色 */
@@ -1026,7 +1026,7 @@ input[type="text"], .terminal-input,
     font-size: 10px;
     color: var(--accent-dim);
     letter-spacing: 3px;
-    opacity: 0.6;
+    opacity: 0.85;
 }
 
 .welcome-divider {
@@ -1441,7 +1441,7 @@ input[type="text"], .terminal-input,
     font-size: 10px;
     color: var(--accent-dim);
     letter-spacing: 2px;
-    opacity: 0.5;
+    opacity: 0.75;
     pointer-events: none;
 }
 
@@ -1597,6 +1597,11 @@ input[type="text"], .terminal-input,
 
 .terminal-input::placeholder {
     color: var(--accent-dim);
+    opacity: 0.75;
+}
+
+/* VOID 纸白：placeholder 适度弱化，视觉层次感 */
+[data-theme="monochrome"] .terminal-input::placeholder {
     opacity: 0.6;
 }
 
