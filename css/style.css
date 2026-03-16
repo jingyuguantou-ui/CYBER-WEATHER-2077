@@ -2486,18 +2486,19 @@ body:not(.app-ready) .panel-fab {
     margin-left: auto;
     background: transparent;
     border: none;
-    color: var(--accent-dim);
+    color: var(--accent-primary);
     cursor: pointer;
     padding: 2px;
     font-size: 12px;
-    opacity: 0.6;
-    transition: opacity 0.2s, transform 0.2s, color 0.2s;
+    opacity: 0.5;
+    transition: opacity 0.2s, transform 0.2s, color 0.2s, text-shadow 0.2s;
 }
 
 .ai-settings-btn:hover {
     opacity: 1;
-    color: var(--accent-primary);
+    color: var(--care-label);
     transform: rotate(45deg);
+    text-shadow: 0 0 8px var(--care-label);
 }
 
 /* AI 响应消息 */
