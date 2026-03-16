@@ -236,9 +236,12 @@
 
             <!-- 右侧单面板（磨砂透明） -->
             <aside class="glass-panel">
-                <!-- 命令输入 -->
+                <!-- 输入区：QUERY + NEXUS 合并 -->
                 <div class="panel-section input-section">
-                    <div class="section-label">QUERY</div>
+                    <div class="dual-labels">
+                        <span class="section-label">QUERY</span>
+                        <span class="section-label ai-label">NEXUS</span>
+                    </div>
                     <div class="input-wrapper">
                         <span class="prompt">&gt;</span>
                         <input 
@@ -251,6 +254,16 @@
                             inputmode="search"
                             enterkeyhint="search"
                         >
+                    </div>
+                    <div class="ai-input-row">
+                        <input 
+                            type="text" 
+                            id="ai-input" 
+                            class="ai-input" 
+                            placeholder="query NEXUS..."
+                            autocomplete="off"
+                        >
+                        <span class="ai-send-icon" id="ai-send-icon" title="发送">▸</span>
                     </div>
                 </div>
                 
@@ -292,7 +305,11 @@
 
                 <!-- 终端输出 -->
                 <div class="panel-section output-section">
-                    <div class="section-label">OUTPUT</div>
+                    <div class="section-label-row">
+                        <span class="section-label">OUTPUT</span>
+                        <span class="section-label-nexus">◈ NEXUS</span>
+                        <button class="ai-settings-btn" id="ai-settings-btn" type="button" title="设置">⚙</button>
+                    </div>
                     <div id="terminal-output" class="terminal-output">
                         <div class="output-line">
                             <span class="message">CONNECTION ESTABLISHED.</span>
@@ -303,6 +320,50 @@
                     </div>
                 </div>
             </aside>
+
+            <!-- AI 设置面板 -->
+            <div class="ai-settings-panel hidden" id="ai-settings-panel">
+                <div class="ai-settings-header">
+                    <span class="ai-settings-title">NEXUS CONFIG</span>
+                    <button class="ai-settings-close" id="ai-settings-close" type="button" aria-label="关闭">✕</button>
+                </div>
+                <div class="ai-settings-body">
+                    <label class="ai-settings-label">PLATFORM</label>
+                    <div class="custom-select" id="platform-select">
+                        <div class="custom-select-trigger" tabindex="0">
+                            <span class="custom-select-value">DeepSeek</span>
+                            <span class="custom-select-arrow">▾</span>
+                        </div>
+                        <div class="custom-select-options hidden">
+                            <div class="custom-select-option selected" data-value="deepseek">DeepSeek</div>
+                            <div class="custom-select-option" data-value="zhipu">智谱 GLM</div>
+                            <div class="custom-select-option" data-value="qwen">通义千问</div>
+                            <div class="custom-select-option" data-value="moonshot">Moonshot</div>
+                            <div class="custom-select-option" data-value="openai">OpenAI</div>
+                        </div>
+                    </div>
+
+                    <label class="ai-settings-label">API KEY</label>
+                    <div class="ai-apikey-row">
+                        <input type="password" class="ai-apikey-input" id="ai-apikey-input" placeholder="sk-..." autocomplete="off">
+                        <button class="ai-apikey-toggle" id="ai-apikey-toggle" type="button">显示</button>
+                    </div>
+
+                    <label class="ai-settings-label">MODEL</label>
+                    <div class="custom-select" id="model-select">
+                        <div class="custom-select-trigger" tabindex="0">
+                            <span class="custom-select-value">deepseek-chat</span>
+                            <span class="custom-select-arrow">▾</span>
+                        </div>
+                        <div class="custom-select-options hidden">
+                            <div class="custom-select-option selected" data-value="deepseek-chat">deepseek-chat</div>
+                            <div class="custom-select-option" data-value="deepseek-reasoner">deepseek-reasoner</div>
+                        </div>
+                    </div>
+
+                    <button class="ai-save-btn" id="ai-save-btn" type="button">保存配置</button>
+                </div>
+            </div>
         </main>
 
         <!-- 底部状态 -->
@@ -363,6 +424,7 @@
     <script src="js/ascii-earth.js"></script>
     <script src="js/terminal-ui.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/ai-assistant.js"></script>
     <script src="js/mobile-panel.js"></script>
     <script src="js/pwa-install.js"></script>
 
