@@ -1229,12 +1229,16 @@ input[type="text"], .terminal-input,
 
 /* FAB 键盘按钮：默认隐藏，仅主内容页（app-ready）移动端显示 */
 .panel-fab {
-    display: none !important;
+    display: none;
 }
 
 @media (max-width: 768px) {
     body.app-ready .panel-fab {
-        display: flex !important;
+        display: flex;
+    }
+    /* 面板打开时隐藏 FAB（配合 JS 添加的 display: none） */
+    body.panel-is-open .panel-fab {
+        display: none;
     }
 }
 
