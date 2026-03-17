@@ -42,6 +42,7 @@ window.MobilePanel = (() => {
         if (!_panel) return;
         _isOpen = true;
         _panel.classList.add('panel-open');
+        document.body.classList.add('panel-is-open');
         if (_overlay) {
             _overlay.classList.add('panel-overlay--visible');
             _overlay.setAttribute('aria-hidden', 'false');
@@ -58,6 +59,7 @@ window.MobilePanel = (() => {
         if (!_panel) return;
         _isOpen = false;
         _panel.classList.remove('panel-open');
+        document.body.classList.remove('panel-is-open');
         if (_overlay) {
             _overlay.classList.remove('panel-overlay--visible');
             _overlay.setAttribute('aria-hidden', 'true');
